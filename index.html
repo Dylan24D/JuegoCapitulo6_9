@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>⚡ Azure Architect - Pokémon Style (Cap 6-9)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        body {
+            background: #0a1a0a;
+            font-family: 'Press Start 2P', 'Segoe UI', monospace;
+            overflow: hidden;
+            height: 100vh;
+            user-select: none;
+            touch-action: none;
+        }
+
+        #game-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: linear-gradient(180deg, #1a3a2a 0%, #0a1a0a 100%);
+            padding: 6px;
+        }
+
+        /* ===== HUD ===== */
+        #hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 18px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.85), rgba(20, 10, 30, 0.85));
+            border: 4px solid #ffcc00;
+            border-radius: 16px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+            gap: 6px;
+            box-shadow: inset 0 0 40px rgba(255, 204, 0, 0.08), 0 4px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .hud-item {
+            color: #ffffff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 0 #000000;
+            font-family: 'Press Start 2P', monospace;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,204,0,0.05));
+            padding: 6px 16px;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 204, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .hud-item:hover { border-color: rgba(255, 204, 0, 0.5); background: rgba(255, 204, 0, 0.05); }
+        .hud-item span { color: #ffcc00; }
+        .hud-item .hud-icon { font-size: 1.2rem; }
+
+        .hud-item .health-bar {
+            display: inline-block;
+            width: 120px;
+            height: 18px;
+            background: #1a0a1a;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 3px solid #ffcc00;
+            vertical-align: middle;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .hud-item .health-bar div {
+            height: 100%;
+            background: linear-gradient(90deg, #ff4444, #ffaa00, #44ff88);
+            transition: width 0.4s;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(68, 255, 136, 0.2);
+        }
+
+        /* ===== CUERPO PRINCIPAL ===== */
+        #main-area {
+            display: flex;
+            flex: 1;
+            gap: 8px;
+            min-height: 0;
+        }
+
+        /* ===== PANEL IZQUIERDO: CAPÍTULOS ===== */
+        #left-panel {
+            width: 260px;
+            min-width: 180px;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.85), rgba(20, 10, 30, 0.85));
+            border: 4px solid #ffcc00;
+            border-radius: 16px;
+            padding: 18px 16px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 40px rgba(255, 204, 0, 0.05), 0 0 40px rgba(255, 204, 0, 0.05);
+            overflow-y: auto;
+        }
+
+        #left-panel h3 {
+            color: #ffcc00;
+            font-size: 0.7rem;
+            text-align: center;
+            padding-bottom: 14px;
+            border-bottom: 3px solid rgba(255, 204, 0, 0.2);
+            margin-bottom: 14px;
+            text-shadow: 2px 2px 0 #000000, 0 0 30px rgba(255, 204, 0, 0.1);
+            font-family: 'Press Start 2P', monospace;
+            letter-spacing: 2px;
+        }
+
+        .chapter-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .chapter-list .chapter-btn {
+            padding: 16px 18px;
+            background: linear-gradient(135deg, rgba(255, 204, 0, 0.05), rgba(255, 204, 0, 0.02));
+            border: 3px solid rgba(255, 204, 0, 0.2);
+            border-radius: 14px;
+            color: #88aa88;
+            font-size: 0.55rem;
+            font-family: 'Press Start 2P', monospace;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-shadow: 1px 1px 0 #000000;
+            text-align: center;
+            line-height: 1.8;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .chapter-list .chapter-btn .sub {
+            font-size: 0.4rem;
+            color: #668866;
+            display: block;
+            margin-top: 3px;
+        }
+
+        .chapter-list .chapter-btn:hover {
+            background: rgba(255, 204, 0, 0.15);
+            border-color: #ffcc00;
+            color: #ffcc00;
+            transform: scale(1.03);
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.1);
+        }
+
+        .chapter-list .chapter-btn.active {
+            background: linear-gradient(135deg, rgba(255, 204, 0, 0.25), rgba(255, 204, 0, 0.08));
+            border-color: #ffcc00;
+            color: #ffcc00;
+            box-shadow: 0 0 40px rgba(255, 204, 0, 0.15), inset 0 0 30px rgba(255, 204, 0, 0.05);
+        }
+
+        .chapter-list .chapter-btn.completed {
+            border-color: #44ff88;
+            color: #44ff88;
+            background: rgba(68, 255, 136, 0.08);
+        }
+        .chapter-list .chapter-btn.completed::after { content: ' ✅'; }
+        .chapter-list .chapter-btn.completed .sub { color: #44aa88; }
+
+        .chapter-list .chapter-btn .emoji { font-size: 1.4rem; display: block; margin-bottom: 3px; }
+
+        /* ===== CENTRO: CANVAS ===== */
+        #canvas-wrapper {
+            flex: 1;
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 4px solid #ffcc00;
+            background: #0a1a0a;
+            min-height: 200px;
+            box-shadow: 0 0 60px rgba(255, 204, 0, 0.05), inset 0 0 60px rgba(0,0,0,0.3);
+        }
+
+        #gameCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: pointer;
+            touch-action: none;
+        }
+
+        /* ===== PANEL DERECHO: EXPLICACIÓN ===== */
+        #right-panel {
+            width: 320px;
+            min-width: 220px;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.85), rgba(20, 10, 30, 0.85));
+            border: 4px solid #ffcc00;
+            border-radius: 16px;
+            padding: 18px 16px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 40px rgba(255, 204, 0, 0.05), 0 0 40px rgba(255, 204, 0, 0.05);
+            overflow-y: auto;
+        }
+
+        #right-panel h3 {
+            color: #ffcc00;
+            font-size: 0.7rem;
+            text-align: center;
+            padding-bottom: 14px;
+            border-bottom: 3px solid rgba(255, 204, 0, 0.2);
+            margin-bottom: 14px;
+            text-shadow: 2px 2px 0 #000000, 0 0 30px rgba(255, 204, 0, 0.1);
+            font-family: 'Press Start 2P', monospace;
+            letter-spacing: 2px;
+        }
+
+        #explanation-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #explanation-box .exp-label {
+            color: #88cc88;
+            font-size: 0.5rem;
+            font-family: 'Press Start 2P', monospace;
+            text-shadow: 1px 1px 0 #000000;
+            padding: 4px 0;
+        }
+
+        #explanation-box .exp-content {
+            background: rgba(0, 0, 0, 0.5);
+            border: 3px solid rgba(255, 204, 0, 0.15);
+            border-radius: 14px;
+            padding: 18px 20px;
+            flex: 1;
+            min-height: 120px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+        }
+
+        #explanation-box .exp-content p {
+            color: #ccddcc;
+            font-size: 0.6rem;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 2;
+            text-shadow: 1px 1px 0 #000000;
+        }
+
+        #explanation-box .exp-content .correct-text { 
+            color: #44ff88; 
+            font-weight: bold;
+            font-size: 0.65rem;
+        }
+        #explanation-box .exp-content .wrong-text { 
+            color: #ff6666; 
+            font-weight: bold;
+            font-size: 0.65rem;
+        }
+        #explanation-box .exp-content .highlight {
+            color: #ffcc00;
+            font-weight: bold;
+        }
+
+        #explanation-box .exp-status {
+            text-align: center;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 0.55rem;
+            font-family: 'Press Start 2P', monospace;
+            background: rgba(0,0,0,0.3);
+            border: 3px solid transparent;
+            transition: all 0.4s;
+            text-shadow: 1px 1px 0 #000000;
+        }
+
+        #explanation-box .exp-status.correct {
+            border-color: #44ff88;
+            color: #44ff88;
+            background: rgba(68, 255, 136, 0.1);
+            box-shadow: 0 0 40px rgba(68, 255, 136, 0.08);
+        }
+
+        #explanation-box .exp-status.wrong {
+            border-color: #ff6666;
+            color: #ff6666;
+            background: rgba(255, 68, 68, 0.1);
+            box-shadow: 0 0 40px rgba(255, 68, 68, 0.08);
+        }
+
+        #explanation-box .exp-status.waiting {
+            border-color: #8888aa;
+            color: #8888aa;
+        }
+
+        /* ===== BOTÓN CONTINUAR ===== */
+        #continue-btn {
+            background: linear-gradient(135deg, #ffcc00, #ddaa00);
+            border: 3px solid #ffcc00;
+            color: #0a0a0a;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 0.55rem;
+            font-family: 'Press Start 2P', monospace;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: none;
+            margin-top: 10px;
+            text-shadow: 1px 1px 0 rgba(255,255,255,0.3);
+            box-shadow: 0 4px 20px rgba(255, 204, 0, 0.2);
+            width: 100%;
+        }
+
+        #continue-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 40px rgba(255, 204, 0, 0.4);
+        }
+
+        #continue-btn.show {
+            display: block;
+            animation: pulseGlow 1s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 4px 20px rgba(255, 204, 0, 0.2); }
+            50% { box-shadow: 0 4px 40px rgba(255, 204, 0, 0.5); }
+        }
+
+        /* ===== POPUPS ===== */
+        #level-popup, #gameover-popup {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        #level-popup.show, #gameover-popup.show { display: flex; }
+
+        .popup-content {
+            border-radius: 24px;
+            padding: 35px 40px;
+            text-align: center;
+            max-width: 480px;
+            width: 90%;
+            animation: popIn 0.6s ease;
+            border: 4px solid #ffcc00;
+            background: linear-gradient(180deg, #1a2a1a, #0a1a0a);
+            box-shadow: 0 0 80px rgba(255, 204, 0, 0.1), inset 0 0 60px rgba(255, 204, 0, 0.02);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5) rotate(-8deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0); opacity: 1; }
+        }
+
+        .popup-content h2 {
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            font-family: 'Press Start 2P', monospace;
+            text-shadow: 2px 2px 0 #000000;
+        }
+        .popup-content p {
+            margin: 10px 0;
+            font-size: 0.8rem;
+            font-family: 'Press Start 2P', monospace;
+            color: #aabbcc;
+            text-shadow: 1px 1px 0 #000000;
+        }
+        .popup-content .stats {
+            font-size: 0.65rem;
+            margin: 5px 0;
+            font-family: 'Press Start 2P', monospace;
+            color: #88ccff;
+            text-shadow: 1px 1px 0 #000000;
+        }
+        .popup-content .stats span { color: #ffcc00; font-weight: 700; }
+        .popup-content button {
+            border: 3px solid #ffcc00;
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 12px;
+            font-family: 'Press Start 2P', monospace;
+            background: linear-gradient(180deg, #ffcc00, #ddaa00);
+            color: #1a1a1a;
+            text-shadow: 1px 1px 0 rgba(255,255,255,0.3);
+            box-shadow: 0 4px 20px rgba(255, 204, 0, 0.2);
+        }
+        .popup-content button:hover { transform: scale(1.05); box-shadow: 0 4px 40px rgba(255, 204, 0, 0.4); }
+
+        #level-popup .popup-content h2 { color: #ffcc00; text-shadow: 0 0 40px rgba(255, 204, 0, 0.2); }
+        #gameover-popup .popup-content { border-color: #ff6666; }
+        #gameover-popup .popup-content h2 { color: #ff6666; text-shadow: 0 0 40px rgba(255, 68, 68, 0.2); }
+        #gameover-popup .popup-content button {
+            border-color: #ff6666;
+            background: linear-gradient(180deg, #ff6666, #cc3333);
+            color: white;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            #left-panel { width: 200px; min-width: 140px; padding: 12px 10px; }
+            #left-panel h3 { font-size: 0.5rem; }
+            .chapter-list .chapter-btn { padding: 12px 14px; font-size: 0.45rem; }
+            .chapter-list .chapter-btn .sub { font-size: 0.3rem; }
+            
+            #right-panel { width: 240px; min-width: 160px; padding: 12px 10px; }
+            #right-panel h3 { font-size: 0.5rem; }
+            #explanation-box .exp-content p { font-size: 0.5rem; }
+            #explanation-box .exp-status { font-size: 0.45rem; }
+            #continue-btn { font-size: 0.45rem; padding: 10px 18px; }
+            
+            .hud-item { font-size: 0.55rem; padding: 4px 12px; }
+            .hud-item .health-bar { width: 90px; height: 14px; }
+        }
+
+        @media (max-width: 768px) {
+            #left-panel { width: 150px; min-width: 100px; padding: 8px 6px; }
+            #left-panel h3 { font-size: 0.4rem; padding-bottom: 8px; }
+            .chapter-list .chapter-btn { padding: 8px 10px; font-size: 0.35rem; border-width: 2px; }
+            .chapter-list .chapter-btn .sub { font-size: 0.25rem; }
+            .chapter-list .chapter-btn .emoji { font-size: 1rem; }
+            
+            #right-panel { width: 170px; min-width: 110px; padding: 8px 6px; }
+            #right-panel h3 { font-size: 0.4rem; padding-bottom: 8px; }
+            #explanation-box .exp-content { padding: 10px 12px; min-height: 80px; }
+            #explanation-box .exp-content p { font-size: 0.4rem; line-height: 1.8; }
+            #explanation-box .exp-status { font-size: 0.35rem; padding: 6px; }
+            #continue-btn { font-size: 0.35rem; padding: 8px 14px; }
+            
+            .hud-item { font-size: 0.4rem; padding: 3px 8px; gap: 4px; }
+            .hud-item .health-bar { width: 60px; height: 10px; border-width: 2px; }
+            .hud-item .hud-icon { font-size: 0.7rem; }
+        }
+
+        @media (max-width: 480px) {
+            #left-panel { width: 100px; min-width: 70px; padding: 4px; }
+            .chapter-list .chapter-btn { padding: 5px 6px; font-size: 0.25rem; }
+            .chapter-list .chapter-btn .sub { font-size: 0.2rem; }
+            #right-panel { width: 110px; min-width: 80px; padding: 4px; }
+            #explanation-box .exp-content p { font-size: 0.32rem; }
+            #explanation-box .exp-status { font-size: 0.25rem; }
+            #continue-btn { font-size: 0.25rem; padding: 4px 8px; }
+            .hud-item { font-size: 0.3rem; padding: 2px 4px; }
+            .hud-item .health-bar { width: 40px; height: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <!-- ===== HUD ===== -->
+        <div id="hud">
+            <div class="hud-item"><span class="hud-icon">📖</span> <span id="levelDisplay">SELEC.</span></div>
+            <div class="hud-item"><span class="hud-icon">❤️</span> <span id="healthDisplay">100</span>% <div class="health-bar"><div id="healthBar" style="width:100%"></div></div></div>
+            <div class="hud-item"><span class="hud-icon">⭐</span> <span id="scoreDisplay">0</span></div>
+            <div class="hud-item"><span class="hud-icon">🔥</span> <span id="streakDisplay">0</span></div>
+            <div class="hud-item"><span class="hud-icon">✅</span> <span id="correctDisplay">0</span></div>
+        </div>
+
+        <!-- ===== CUERPO PRINCIPAL ===== -->
+        <div id="main-area">
+            <!-- PANEL IZQUIERDO: CAPÍTULOS -->
+            <div id="left-panel">
+                <h3>📖 CAPÍTULOS</h3>
+                <div class="chapter-list" id="chapterList">
+                    <button class="chapter-btn" data-chapter="6">
+                        <span class="emoji">📘</span> Cap 6
+                        <span class="sub">Tipos y Funciones</span>
+                    </button>
+                    <button class="chapter-btn" data-chapter="7">
+                        <span class="emoji">📗</span> Cap 7
+                        <span class="sub">Instrucciones T-SQL</span>
+                    </button>
+                    <button class="chapter-btn" data-chapter="8">
+                        <span class="emoji">📕</span> Cap 8
+                        <span class="sub">DDL</span>
+                    </button>
+                    <button class="chapter-btn" data-chapter="9">
+                        <span class="emoji">📙</span> Cap 9
+                        <span class="sub">DML y DCL</span>
+                    </button>
+                </div>
+                <div style="margin-top:auto; text-align:center; color:#445544; font-size:0.3rem; padding-top:10px; border-top:2px solid rgba(255,204,0,0.1);">
+                    🎯 Haz clic para jugar
+                </div>
+            </div>
+
+            <!-- CENTRO: CANVAS -->
+            <div id="canvas-wrapper">
+                <canvas id="gameCanvas"></canvas>
+            </div>
+
+            <!-- PANEL DERECHO: EXPLICACIÓN -->
+            <div id="right-panel">
+                <h3>📝 EXPLICACIÓN</h3>
+                <div id="explanation-box">
+                    <div class="exp-label">📌 RESPUESTA</div>
+                    <div class="exp-content" id="expContent">
+                        <p style="color:#889988; font-size:0.55rem; text-align:center; padding-top:20px;">
+                            ⭐ Selecciona un capítulo<br>y responde las preguntas
+                        </p>
+                    </div>
+                    <div class="exp-status waiting" id="expStatus">⏳ ESPERANDO...</div>
+                    <button id="continue-btn">▶ CONTINUAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== POPUPS ===== -->
+    <div id="level-popup">
+        <div class="popup-content">
+            <h2>🎉 ¡CAPÍTULO COMPLETADO!</h2>
+            <p id="levelCompleteMsg">¡Excelente trabajo, Entrenador!</p>
+            <div class="stats">🏆 Puntaje: <span id="popupScore">0</span></div>
+            <div class="stats">✅ Aciertos: <span id="popupCorrect">0</span></div>
+            <button id="nextLevelBtn">▶ SIGUIENTE CAPÍTULO</button>
+        </div>
+    </div>
+
+    <div id="gameover-popup">
+        <div class="popup-content">
+            <h2>💀 ¡GAME OVER!</h2>
+            <p>¡La respuesta ha caído al suelo!</p>
+            <div class="stats">🏆 Puntaje final: <span id="finalScore">0</span></div>
+            <div class="stats">📖 Capítulos: <span id="finalLevel">0</span></div>
+            <button id="restartBtn">🔄 REINTENTAR</button>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        // PREGUNTAS - Capítulos 6-9 (4 capítulos × 5 preguntas = 20 preguntas)
+        // ================================================================
+        const QUESTIONS = {
+            6: {
+                name: "Tipos de datos, funciones y operadores",
+                enemyName: "💎 Titan de Datos",
+                questions: [
+                    { question: "¿Cuál de estos tipos de datos numéricos es compatible con SQL Azure?", options: ["A) bigint", "B) Tipos definidos por el usuario de CLR", "C) image (desusado)", "D) Ninguno de los anteriores"], correct: 0, explanation: "✅ bigint es un tipo de datos numérico compatible con SQL Azure" },
+                    { question: "¿Qué tipo de datos se usa para almacenar datos GPS de latitud y longitud?", options: ["A) geometry", "B) geography", "C) hierarchyid", "D) xml"], correct: 1, explanation: "✅ geography se usa para datos espaciales como GPS (latitud/longitud)" },
+                    { question: "¿Qué función de agregado devuelve la suma de todos los valores de una columna?", options: ["A) COUNT", "B) AVG", "C) SUM", "D) MAX"], correct: 2, explanation: "✅ SUM devuelve la suma total de todos los valores de una columna" },
+                    { question: "¿Qué vista del sistema permite ver el consumo de ancho de banda?", options: ["A) sys.sql_logins", "B) sys.bandwidth_usage", "C) sys.dm_tran_locks", "D) sys.tables"], correct: 1, explanation: "✅ sys.bandwidth_usage muestra el consumo de ancho de banda en SQL Azure" },
+                    { question: "¿Qué método XML se usa para comprobar si una expresión XQuery devuelve un resultado?", options: ["A) query()", "B) exist()", "C) modify()", "D) value()"], correct: 1, explanation: "✅ exist() comprueba si una expresión XQuery devuelve un resultado" }
+                ]
+            },
+            7: {
+                name: "Instrucciones admitidas y procedimientos",
+                enemyName: "⚡ Guerrero T-SQL",
+                questions: [
+                    { question: "¿Cuál es el valor máximo de paralelismo (MAXDOP) permitido en SQL Azure?", options: ["A) 0 (Ilimitado)", "B) 1", "C) 4", "D) 8"], correct: 1, explanation: "✅ El valor MAXDOP permitido en SQL Azure es 1" },
+                    { question: "¿Qué instrucción común de T-SQL para cambiar de base de datos NO es compatible en la nube?", options: ["A) SELECT", "B) INSERT", "C) USE", "D) EXECUTE"], correct: 2, explanation: "✅ USE no es compatible para saltar entre bases de datos en SQL Azure" },
+                    { question: "¿Qué sucede durante el 'Throttling' estricto?", options: ["A) Se permiten todas las conexiones", "B) No se permiten nuevas conexiones hasta que se liberen recursos", "C) El servidor se reinicia automáticamente", "D) Se eliminan todos los índices"], correct: 1, explanation: "✅ En Throttling estricto, no se permiten nuevas conexiones hasta liberar recursos" },
+                    { question: "Para obtener el 'modo de limitación' de un código de motivo, ¿qué operación matemática se aplica?", options: ["A) Multiplicación por 10", "B) División entre 100", "C) Módulo 4", "D) Raíz cuadrada"], correct: 2, explanation: "✅ Se aplica módulo 4 al código de motivo para obtener el modo de limitación" },
+                    { question: "¿Qué procedimiento almacenado se usa para crear una regla de firewall?", options: ["A) sp_addlogin", "B) sp_set_firewall_rule", "C) sp_helpstats", "D) sp_recompile"], correct: 1, explanation: "✅ sp_set_firewall_rule crea reglas de firewall en SQL Azure" }
+                ]
+            },
+            8: {
+                name: "Lenguaje de definición de datos (DDL)",
+                enemyName: "🏗️ Constructor de Datos",
+                questions: [
+                    { question: "¿Qué cláusula de ALTER DATABASE se usa para cambiar de Web Edition a Business Edition?", options: ["A) RENAME", "B) MODIFY (EDITION = 'business')", "C) UPGRADE", "D) SET"], correct: 1, explanation: "✅ MODIFY (EDITION = 'business') cambia de Web a Business Edition" },
+                    { question: "¿Cómo debe ejecutarse la instrucción CREATE DATABASE en un script?", options: ["A) Al final de un procedimiento", "B) Como la única instrucción en un lote de Transact-SQL", "C) Dentro de una transacción distribuida", "D) Después de una instrucción USE"], correct: 1, explanation: "✅ CREATE DATABASE debe ser la única instrucción en un lote T-SQL" },
+                    { question: "¿Qué entidad NO se puede modificar con ALTER AUTHORIZATION en SQL Azure?", options: ["A) ROLE", "B) DATABASE", "C) SCHEMA", "D) OBJECT"], correct: 1, explanation: "✅ DATABASE no se puede modificar con ALTER AUTHORIZATION en SQL Azure" },
+                    { question: "¿Es posible crear una tabla sin índice clúster?", options: ["A) No, el comando CREATE TABLE fallará", "B) Sí, pero no se podrán insertar datos hasta que se cree uno", "C) Sí, y funciona igual que en local", "D) No, SQL Azure los crea automáticamente de forma aleatoria"], correct: 1, explanation: "✅ Sí se puede crear, pero no se insertarán datos hasta tener índice clúster" },
+                    { question: "¿Qué requiere la instrucción DROP INDEX además del nombre del índice?", options: ["A) La fecha de creación", "B) La cláusula ON seguida del nombre del objeto (tabla/vista)", "C) El nombre del servidor", "D) La contraseña de administrador"], correct: 1, explanation: "✅ DROP INDEX requiere ON seguido del nombre de la tabla o vista" }
+                ]
+            },
+            9: {
+                name: "DML y DCL",
+                enemyName: "👑 Señor de los Datos",
+                questions: [
+                    { question: "¿Qué tipo de nombres NO se admiten en la instrucción INSERT?", options: ["A) Nombres de una parte", "B) Nombres de dos partes", "C) Nombres de cuatro partes (servidores vinculados)", "D) Nombres de tres partes (si la BD es la actual)"], correct: 2, explanation: "✅ Nombres de cuatro partes (servidores vinculados) no son admitidos en INSERT" },
+                    { question: "¿Qué comando del lenguaje TCL deshace todos los cambios de una transacción actual?", options: ["A) COMMIT", "B) ROLLBACK TRANSACTION", "C) UNDO", "D) CANCEL"], correct: 1, explanation: "✅ ROLLBACK TRANSACTION deshace todos los cambios de la transacción actual" },
+                    { question: "¿Qué instrucción se usa para revocar un permiso previamente concedido?", options: ["A) GRANT", "B) DENY", "C) REVOKE", "D) DELETE"], correct: 2, explanation: "✅ REVOKE revoca un permiso que fue previamente concedido" },
+                    { question: "¿Qué opción de EXECUTE NO es compatible con SQL Azure?", options: ["A) WITH RECOMPILE", "B) Opción Number", "C) Ejecución de procedimientos almacenados", "D) Ejecución de cadenas de caracteres"], correct: 1, explanation: "✅ La opción Number de EXECUTE no es compatible con SQL Azure" },
+                    { question: "¿Qué limitación tiene la instrucción USE en SQL Azure?", options: ["A) Permite cambiar a cualquier servidor", "B) Solo puede hacer referencia a la base de datos actual (no cambia de contexto)", "C) Solo se puede usar una vez al año", "D) Requiere permisos de dbmanager para cada uso"], correct: 1, explanation: "✅ USE solo puede referenciar la base actual, no cambia el contexto" }
+                ]
+            }
+        };
+
+        // ================================================================
+        // JUEGO PRINCIPAL
+        // ================================================================
+        class PokemonQuiz {
+            constructor() {
+                this.canvas = document.getElementById('gameCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                
+                this.currentChapter = null;
+                this.questionIndex = 0;
+                this.score = 0;
+                this.correctCount = 0;
+                this.streak = 0;
+                this.health = 100;
+                this.maxHealth = 100;
+                this.gameOver = false;
+                this.levelComplete = false;
+                this.chaptersCompleted = [];
+                this.isPlaying = false;
+                this.particles = [];
+                this.floatingTexts = [];
+                this.pokeballs = [];
+                this.fallingOptions = [];
+                this.baseSpeed = 0.5;
+                this.questionActive = false;
+                this.currentQuestion = null;
+                this.correctAnswer = null;
+                this.pokemonSprites = ['💎', '⚡', '🏗️', '👑', '🦋', '🐉'];
+                this.currentPokemon = '💎';
+                this.showingExplanation = false;
+                this.waitingForContinue = false;
+                this.grassBlades = [];
+                this.clouds = [];
+
+                this.init();
+                this.setupEvents();
+                this.gameLoop();
+            }
+
+            init() {
+                const rect = this.canvas.parentElement.getBoundingClientRect();
+                this.canvas.width = rect.width;
+                this.canvas.height = rect.height;
+                this.generatePokeballs();
+                this.generateGrass();
+                this.generateClouds();
+                this.updateHUD();
+                this.updateExplanation('🎯 Selecciona un capítulo (6-9) para comenzar', 'waiting');
+                document.querySelectorAll('.chapter-btn').forEach(b => b.classList.remove('locked'));
+            }
+
+            generateGrass() {
+                this.grassBlades = [];
+                for (let i = 0; i < 80; i++) {
+                    this.grassBlades.push({
+                        x: Math.random() * 2000,
+                        height: 10 + Math.random() * 25,
+                        width: 2 + Math.random() * 4,
+                        color: `hsl(${100 + Math.random() * 30}, ${50 + Math.random() * 30}%, ${25 + Math.random() * 20}%)`,
+                        sway: Math.random() * 0.05,
+                        phase: Math.random() * Math.PI * 2
+                    });
+                }
+            }
+
+            generateClouds() {
+                this.clouds = [];
+                for (let i = 0; i < 8; i++) {
+                    this.clouds.push({
+                        x: Math.random() * 2000 - 200,
+                        y: Math.random() * 180 + 20,
+                        width: 80 + Math.random() * 150,
+                        speed: 0.1 + Math.random() * 0.25,
+                        opacity: 0.1 + Math.random() * 0.15
+                    });
+                }
+            }
+
+            generatePokeballs() {
+                this.pokeballs = [];
+                const colors = ['#ff0000', '#ffcc00', '#4488ff', '#44ff88', '#ff44ff', '#ff8844', '#44ddff', '#ff66aa'];
+                for (let i = 0; i < 12; i++) {
+                    this.pokeballs.push({
+                        x: Math.random() * 2000,
+                        y: Math.random() * 800,
+                        size: 18 + Math.random() * 30,
+                        speed: 0.08 + Math.random() * 0.15,
+                        rotation: Math.random() * Math.PI * 2,
+                        color: colors[i % colors.length]
+                    });
+                }
+            }
+
+            setupEvents() {
+                document.querySelectorAll('.chapter-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const chapter = parseInt(btn.dataset.chapter);
+                        this.startChapter(chapter);
+                    });
+                });
+
+                document.getElementById('continue-btn').addEventListener('click', () => {
+                    if (this.waitingForContinue) {
+                        this.waitingForContinue = false;
+                        document.getElementById('continue-btn').classList.remove('show');
+                        this.showingExplanation = false;
+                        this.questionIndex++;
+                        this.spawnQuestion();
+                    }
+                });
+
+                document.getElementById('nextLevelBtn').addEventListener('click', () => {
+                    document.getElementById('level-popup').classList.remove('show');
+                    const next = this.currentChapter + 1;
+                    if (next <= 9) this.startChapter(next);
+                    else this.showGameOver();
+                });
+
+                document.getElementById('restartBtn').addEventListener('click', () => {
+                    document.getElementById('gameover-popup').classList.remove('show');
+                    this.restart();
+                });
+
+                this.canvas.addEventListener('click', (e) => this.handleClick(e));
+                this.canvas.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const rect = this.canvas.getBoundingClientRect();
+                    this.handleClick({ clientX: touch.clientX, clientY: touch.clientY });
+                });
+
+                window.addEventListener('resize', () => {
+                    const rect = this.canvas.parentElement.getBoundingClientRect();
+                    this.canvas.width = rect.width;
+                    this.canvas.height = rect.height;
+                });
+            }
+
+            handleClick(e) {
+                if (!this.isPlaying || this.gameOver || this.showingExplanation || this.waitingForContinue) return;
+                const rect = this.canvas.getBoundingClientRect();
+                const x = (e.clientX - rect.left) * (this.canvas.width / rect.width);
+                const y = (e.clientY - rect.top) * (this.canvas.height / rect.height);
+                this.checkClick(x, y);
+            }
+
+            startChapter(chapter) {
+                if (chapter < 6 || chapter > 9) return;
+                
+                this.currentChapter = chapter;
+                this.questionIndex = 0;
+                this.health = Math.min(this.maxHealth, this.health + 25);
+                this.gameOver = false;
+                this.levelComplete = false;
+                this.isPlaying = true;
+                this.fallingOptions = [];
+                this.particles = [];
+                this.floatingTexts = [];
+                this.questionActive = false;
+                this.showingExplanation = false;
+                this.waitingForContinue = false;
+                this.currentPokemon = this.pokemonSprites[(chapter - 6) % this.pokemonSprites.length];
+
+                document.querySelectorAll('.chapter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (parseInt(btn.dataset.chapter) === chapter) btn.classList.add('active');
+                    if (this.chaptersCompleted.includes(parseInt(btn.dataset.chapter))) {
+                        btn.classList.add('completed');
+                    }
+                });
+
+                document.getElementById('levelDisplay').textContent = `CAP ${chapter}`;
+                document.getElementById('continue-btn').classList.remove('show');
+                this.updateHUD();
+                this.updateExplanation(`📖 Capítulo ${chapter}: ${QUESTIONS[chapter].name}`, 'waiting');
+                
+                setTimeout(() => this.spawnQuestion(), 600);
+                this.addFloatingText(this.canvas.width/2, 60, `📖 CAP ${chapter}`, 'special');
+            }
+
+            spawnQuestion() {
+                const questions = QUESTIONS[this.currentChapter]?.questions || [];
+                if (this.questionIndex >= questions.length) {
+                    this.completeChapter();
+                    return;
+                }
+
+                const q = questions[this.questionIndex];
+                this.currentQuestion = q;
+                this.correctAnswer = q.correct;
+                this.questionActive = true;
+                this.showingExplanation = false;
+                this.waitingForContinue = false;
+                this.fallingOptions = [];
+
+                const w = this.canvas.width;
+                const h = this.canvas.height;
+                
+                const optWidth = Math.min(240, w * 0.48);
+                const optHeight = Math.min(70, h * 0.11);
+                
+                const colors = ['#ff5555', '#ffcc00', '#5599ff', '#55ff88'];
+                const positions = [];
+                const spacing = Math.min(optWidth + 35, w / 4);
+                const startX = (w - spacing * 3) / 2;
+                
+                for (let i = 0; i < 4; i++) {
+                    positions.push(startX + i * spacing);
+                }
+
+                const shuffled = q.options.map((text, idx) => ({
+                    text, idx, isCorrect: idx === q.correct,
+                    x: positions[idx] + (Math.random() - 0.5) * 20,
+                    y: -optHeight - Math.random() * 80,
+                    speed: this.baseSpeed + (0.4 + Math.random() * 0.3),
+                    color: colors[idx % colors.length],
+                    width: optWidth,
+                    height: optHeight,
+                    scale: 1,
+                    rotation: (Math.random() - 0.5) * 0.02,
+                    state: 'normal',
+                    selected: false
+                }));
+
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+                shuffled.forEach((o, i) => {
+                    o.x = positions[i] + (Math.random() - 0.5) * 15;
+                });
+                this.fallingOptions = shuffled;
+
+                this.updateExplanation(`❓ ${q.question}`, 'waiting');
+            }
+
+            checkClick(x, y) {
+                if (!this.questionActive || this.gameOver || this.showingExplanation || this.waitingForContinue) return;
+
+                for (let opt of this.fallingOptions) {
+                    const halfW = opt.width / 2;
+                    const halfH = opt.height / 2;
+                    if (x > opt.x - halfW && x < opt.x + halfW &&
+                        y > opt.y - halfH && y < opt.y + halfH) {
+                        
+                        opt.selected = true;
+                        this.questionActive = false;
+                        
+                        if (opt.isCorrect) {
+                            this.handleCorrect(opt);
+                        } else {
+                            this.handleWrong(opt);
+                        }
+                        return;
+                    }
+                }
+                this.addFloatingText(x, y - 20, '❌ ¡Falla!', 'damage');
+            }
+
+            handleCorrect(opt) {
+                opt.state = 'correct';
+                this.fallingOptions.forEach(o => {
+                    if (o.isCorrect && o !== opt) o.state = 'correct';
+                });
+                
+                this.showingExplanation = true;
+                this.waitingForContinue = true;
+                this.streak = Math.min(this.streak + 1, 10);
+                const bonus = this.streak * 2;
+                this.score += 15 + bonus;
+                this.correctCount++;
+                this.lastAnswerCorrect = true;
+
+                this.spawnParticles(opt.x, opt.y, 40, '#44ff88');
+                this.addFloatingText(opt.x, opt.y - 40, `✨ +${15 + bonus}`, 'xp');
+                if (this.streak >= 5) {
+                    this.addFloatingText(opt.x, opt.y - 70, `🔥 ${this.streak}x RACHA!`, 'special');
+                }
+
+                this.fallingOptions.forEach(o => {
+                    if (o !== opt) {
+                        o.speed = 0;
+                        o.state = 'normal';
+                        this.spawnParticles(o.x, o.y, 8, '#886688');
+                    }
+                });
+
+                this.updateExplanation(
+                    `✅ <span class="correct-text">¡Correcto!</span>\n${this.currentQuestion.explanation}`,
+                    'correct'
+                );
+
+                document.getElementById('continue-btn').classList.add('show');
+                this.updateHUD();
+                this.render();
+            }
+
+            handleWrong(opt) {
+                opt.state = 'wrong';
+                this.fallingOptions.forEach(o => {
+                    if (o.isCorrect) {
+                        o.state = 'correct';
+                        this.spawnParticles(o.x, o.y, 35, '#ffcc00');
+                        this.addFloatingText(o.x, o.y - 20, '👈 CORRECTA', 'xp');
+                    }
+                    if (o !== opt && !o.isCorrect) {
+                        o.speed = 0;
+                        o.state = 'normal';
+                    }
+                });
+                
+                this.showingExplanation = true;
+                this.waitingForContinue = true;
+                this.streak = 0;
+                this.health -= 12;
+                this.lastAnswerCorrect = false;
+
+                this.spawnParticles(opt.x, opt.y, 30, '#ff5555');
+                this.addFloatingText(opt.x, opt.y - 40, '💔 -12 HP', 'damage');
+
+                this.fallingOptions.forEach(o => {
+                    if (o !== opt && !o.isCorrect) {
+                        o.speed = 0;
+                    }
+                });
+
+                const correctText = this.currentQuestion.options[this.currentQuestion.correct];
+                this.updateExplanation(
+                    `❌ <span class="wrong-text">Incorrecto.</span>\nLa respuesta correcta era: <span class="highlight">${correctText}</span>\n${this.currentQuestion.explanation}`,
+                    'wrong'
+                );
+
+                if (this.health <= 0) {
+                    this.health = 0;
+                    this.gameOver = true;
+                    this.isPlaying = false;
+                    this.showGameOver();
+                    this.updateHUD();
+                    return;
+                }
+
+                document.getElementById('continue-btn').classList.add('show');
+                this.updateHUD();
+                this.render();
+            }
+
+            updateExplanation(text, type = 'waiting') {
+                const content = document.getElementById('expContent');
+                const status = document.getElementById('expStatus');
+                
+                content.innerHTML = `<p style="font-size:0.6rem; line-height:2.2; color:#ccddcc; white-space:pre-line;">${text}</p>`;
+                
+                status.className = 'exp-status';
+                if (type === 'correct') {
+                    status.classList.add('correct');
+                    status.textContent = '✅ ¡CORRECTO!';
+                } else if (type === 'wrong') {
+                    status.classList.add('wrong');
+                    status.textContent = '❌ INCORRECTO';
+                } else {
+                    status.classList.add('waiting');
+                    status.textContent = '⏳ ESPERANDO...';
+                }
+            }
+
+            completeChapter() {
+                this.isPlaying = false;
+                this.levelComplete = true;
+                if (!this.chaptersCompleted.includes(this.currentChapter)) {
+                    this.chaptersCompleted.push(this.currentChapter);
+                }
+                
+                document.querySelectorAll('.chapter-btn').forEach(btn => {
+                    const ch = parseInt(btn.dataset.chapter);
+                    if (this.chaptersCompleted.includes(ch)) {
+                        btn.classList.add('completed');
+                    }
+                });
+
+                document.getElementById('popupScore').textContent = this.score;
+                document.getElementById('popupCorrect').textContent = this.correctCount;
+                
+                if (this.currentChapter >= 9) {
+                    document.getElementById('levelCompleteMsg').textContent = '🏆 ¡TODOS LOS CAPÍTULOS COMPLETADOS!';
+                    document.getElementById('nextLevelBtn').textContent = '🏆 VER RESULTADO';
+                } else {
+                    document.getElementById('levelCompleteMsg').textContent = `📖 ¡Capítulo ${this.currentChapter} completado!`;
+                    document.getElementById('nextLevelBtn').textContent = `▶ SIGUIENTE: Cap ${this.currentChapter + 1}`;
+                }
+                document.getElementById('level-popup').classList.add('show');
+                this.updateExplanation('🎉 ¡Capítulo completado!', 'correct');
+                document.getElementById('continue-btn').classList.remove('show');
+            }
+
+            showGameOver() {
+                document.getElementById('finalScore').textContent = this.score;
+                document.getElementById('finalLevel').textContent = this.chaptersCompleted.length;
+                document.getElementById('gameover-popup').classList.add('show');
+            }
+
+            restart() {
+                this.currentChapter = null;
+                this.questionIndex = 0;
+                this.score = 0;
+                this.correctCount = 0;
+                this.streak = 0;
+                this.health = this.maxHealth;
+                this.gameOver = false;
+                this.levelComplete = false;
+                this.isPlaying = false;
+                this.fallingOptions = [];
+                this.particles = [];
+                this.floatingTexts = [];
+                this.questionActive = false;
+                this.chaptersCompleted = [];
+                this.showingExplanation = false;
+                this.waitingForContinue = false;
+
+                document.querySelectorAll('.chapter-btn').forEach(btn => {
+                    btn.classList.remove('completed', 'active');
+                });
+
+                document.getElementById('levelDisplay').textContent = 'SELEC.';
+                document.getElementById('continue-btn').classList.remove('show');
+                this.updateHUD();
+                this.updateExplanation('🎯 Selecciona un capítulo (6-9) para comenzar', 'waiting');
+                this.addFloatingText(this.canvas.width/2, 60, '🔄 REINICIADO', 'special');
+            }
+
+            spawnParticles(x, y, count, color) {
+                for (let i = 0; i < count; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = Math.random() * 5 + 2;
+                    this.particles.push({
+                        x, y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed - 2,
+                        size: Math.random() * 8 + 3,
+                        life: 40 + Math.random() * 30,
+                        color: color,
+                        decay: 0.97 + Math.random() * 0.02
+                    });
+                }
+            }
+
+            addFloatingText(x, y, text, type = 'xp') {
+                this.floatingTexts.push({
+                    x, y,
+                    text: text,
+                    type: type,
+                    life: 55,
+                    vy: -1.2
+                });
+            }
+
+            updateHUD() {
+                document.getElementById('healthDisplay').textContent = Math.floor(this.health);
+                document.getElementById('healthBar').style.width = `${this.health / this.maxHealth * 100}%`;
+                document.getElementById('scoreDisplay').textContent = this.score;
+                document.getElementById('streakDisplay').textContent = this.streak;
+                document.getElementById('correctDisplay').textContent = this.correctCount;
+
+                const bar = document.getElementById('healthBar');
+                const pct = this.health / this.maxHealth;
+                if (pct > 0.6) bar.style.background = 'linear-gradient(90deg, #44ff88, #00ffcc)';
+                else if (pct > 0.3) bar.style.background = 'linear-gradient(90deg, #ffaa00, #ff6600)';
+                else bar.style.background = 'linear-gradient(90deg, #ff4444, #ff0000)';
+            }
+
+            render() {
+                const ctx = this.ctx;
+                const w = this.canvas.width;
+                const h = this.canvas.height;
+
+                ctx.clearRect(0, 0, w, h);
+
+                // === FONDO ===
+                const skyGrad = ctx.createLinearGradient(0, 0, 0, h * 0.6);
+                skyGrad.addColorStop(0, '#3a7fca');
+                skyGrad.addColorStop(0.3, '#5aa0e0');
+                skyGrad.addColorStop(0.6, '#7ab8f0');
+                skyGrad.addColorStop(1, '#87ceeb');
+                ctx.fillStyle = skyGrad;
+                ctx.fillRect(0, 0, w, h * 0.6);
+
+                // Nubes
+                this.clouds.forEach(c => {
+                    c.x += c.speed;
+                    if (c.x > w + 250) c.x = -250;
+                    ctx.globalAlpha = c.opacity;
+                    ctx.fillStyle = '#ffffff';
+                    ctx.shadowColor = 'rgba(255,255,255,0.05)';
+                    ctx.shadowBlur = 30;
+                    ctx.beginPath();
+                    ctx.arc(c.x, c.y, c.width * 0.3, 0, Math.PI * 2);
+                    ctx.arc(c.x + c.width * 0.25, c.y - c.width * 0.2, c.width * 0.35, 0, Math.PI * 2);
+                    ctx.arc(c.x + c.width * 0.5, c.y - c.width * 0.1, c.width * 0.3, 0, Math.PI * 2);
+                    ctx.arc(c.x + c.width * 0.2, c.y + c.width * 0.05, c.width * 0.25, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                });
+                ctx.globalAlpha = 1;
+
+                // Colinas
+                ctx.fillStyle = '#4a9a4a';
+                ctx.shadowColor = 'rgba(0,0,0,0.1)';
+                ctx.shadowBlur = 8;
+                ctx.beginPath();
+                ctx.moveTo(0, h * 0.55);
+                for (let x = 0; x <= w; x += 2) {
+                    const y = h * 0.55 + Math.sin(x * 0.005) * 35 + Math.sin(x * 0.008 + 1) * 25 + Math.sin(x * 0.003 + 2) * 18;
+                    ctx.lineTo(x, y);
+                }
+                ctx.lineTo(w, h);
+                ctx.lineTo(0, h);
+                ctx.fill();
+
+                // Césped
+                const grassGrad = ctx.createLinearGradient(0, h * 0.5, 0, h);
+                grassGrad.addColorStop(0, '#5abf5a');
+                grassGrad.addColorStop(0.25, '#4aaf4a');
+                grassGrad.addColorStop(0.5, '#3d8a3d');
+                grassGrad.addColorStop(0.75, '#2d6a2d');
+                grassGrad.addColorStop(1, '#1a4a1a');
+                ctx.fillStyle = grassGrad;
+                ctx.fillRect(0, h * 0.5, w, h * 0.5);
+                ctx.shadowBlur = 0;
+
+                // Hierba
+                this.grassBlades.forEach(g => {
+                    const sway = Math.sin(Date.now() * g.sway + g.phase) * 4;
+                    ctx.strokeStyle = g.color;
+                    ctx.lineWidth = g.width;
+                    ctx.shadowColor = 'rgba(0,0,0,0.05)';
+                    ctx.shadowBlur = 3;
+                    ctx.beginPath();
+                    ctx.moveTo(g.x % w, h * 0.5 + 5 + g.height * 0.3);
+                    ctx.quadraticCurveTo(
+                        (g.x % w) + sway,
+                        h * 0.5 + 5,
+                        (g.x % w) + sway * 1.5,
+                        h * 0.5 + 5 - g.height
+                    );
+                    ctx.stroke();
+                });
+                ctx.shadowBlur = 0;
+
+                // Pokebolas
+                this.pokeballs.forEach(pb => {
+                    pb.y += pb.speed;
+                    pb.rotation += 0.003;
+                    if (pb.y > h + 60) { pb.y = -60; pb.x = Math.random() * w; }
+                    
+                    ctx.save();
+                    ctx.translate(pb.x, pb.y);
+                    ctx.rotate(pb.rotation);
+                    
+                    ctx.shadowColor = 'rgba(0,0,0,0.2)';
+                    ctx.shadowBlur = 20;
+                    
+                    ctx.beginPath();
+                    ctx.arc(0, 0, pb.size, 0, Math.PI * 2);
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fill();
+                    ctx.strokeStyle = '#333';
+                    ctx.lineWidth = 2.5;
+                    ctx.stroke();
+                    
+                    ctx.beginPath();
+                    ctx.arc(0, 0, pb.size, -Math.PI, 0);
+                    ctx.fillStyle = pb.color;
+                    ctx.fill();
+                    ctx.stroke();
+                    
+                    ctx.strokeStyle = '#333';
+                    ctx.lineWidth = 2.5;
+                    ctx.beginPath();
+                    ctx.moveTo(-pb.size, 0);
+                    ctx.lineTo(pb.size, 0);
+                    ctx.stroke();
+                    
+                    ctx.shadowBlur = 0;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, pb.size * 0.27, 0, Math.PI * 2);
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fill();
+                    ctx.strokeStyle = '#333';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    
+                    ctx.beginPath();
+                    ctx.arc(0, 0, pb.size * 0.13, 0, Math.PI * 2);
+                    ctx.fillStyle = '#333';
+                    ctx.fill();
+                    
+                    ctx.restore();
+                });
+
+                // === OPCIONES CAYENDO ===
+                this.fallingOptions.forEach(opt => {
+                    if (opt.state === 'normal') {
+                        opt.y += opt.speed;
+                    }
+                    
+                    const halfW = opt.width / 2;
+                    const halfH = opt.height / 2;
+                    
+                    let borderColor = opt.color;
+                    let bgColor = 'rgba(0, 0, 0, 0.9)';
+                    let glowColor = opt.color + '55';
+                    
+                    if (opt.state === 'correct') {
+                        borderColor = '#44ff88';
+                        bgColor = 'rgba(0, 50, 20, 0.9)';
+                        glowColor = '#44ff8866';
+                        ctx.shadowColor = '#44ff88';
+                        ctx.shadowBlur = 40;
+                    } else if (opt.state === 'wrong') {
+                        borderColor = '#ff4444';
+                        bgColor = 'rgba(50, 0, 0, 0.9)';
+                        glowColor = '#ff444466';
+                        ctx.shadowColor = '#ff4444';
+                        ctx.shadowBlur = 40;
+                    } else {
+                        ctx.shadowColor = opt.color + '55';
+                        ctx.shadowBlur = 30;
+                    }
+                    
+                    ctx.fillStyle = bgColor;
+                    ctx.strokeStyle = borderColor;
+                    ctx.lineWidth = opt.state !== 'normal' ? 4 : 3.5;
+                    ctx.beginPath();
+                    ctx.roundRect(opt.x - halfW, opt.y - halfH, opt.width, opt.height, 16);
+                    ctx.fill();
+                    ctx.stroke();
+                    
+                    ctx.shadowBlur = 0;
+                    
+                    const innerGrad = ctx.createLinearGradient(opt.x, opt.y - halfH, opt.x, opt.y + halfH);
+                    innerGrad.addColorStop(0, 'rgba(255,255,255,0.08)');
+                    innerGrad.addColorStop(0.5, 'rgba(255,255,255,0)');
+                    innerGrad.addColorStop(1, 'rgba(0,0,0,0.1)');
+                    ctx.fillStyle = innerGrad;
+                    ctx.beginPath();
+                    ctx.roundRect(opt.x - halfW + 4, opt.y - halfH + 4, opt.width - 8, opt.height - 8, 14);
+                    ctx.fill();
+                    
+                    ctx.shadowBlur = 0;
+                    ctx.fillStyle = opt.state === 'correct' ? '#44ff88' : 
+                                   opt.state === 'wrong' ? '#ff4444' : '#ffffff';
+                    const fontSize = Math.min(18, opt.width / 10);
+                    ctx.font = `bold ${fontSize}px 'Segoe UI', Arial, sans-serif`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    
+                    let displayText = opt.text;
+                    const maxChars = Math.floor(opt.width / 8.5);
+                    if (displayText.length > maxChars) {
+                        displayText = displayText.substring(0, maxChars - 3) + '...';
+                    }
+                    ctx.fillText(displayText, opt.x, opt.y - 1);
+                    
+                    const letterColor = opt.state === 'correct' ? '#44ff88' : 
+                                       opt.state === 'wrong' ? '#ff4444' : opt.color;
+                    ctx.fillStyle = letterColor;
+                    const letterSize = Math.min(15, opt.width / 13);
+                    ctx.font = `bold ${letterSize}px 'Segoe UI', Arial, sans-serif`;
+                    const letter = String.fromCharCode(65 + opt.index);
+                    ctx.shadowColor = letterColor;
+                    ctx.shadowBlur = opt.state !== 'normal' ? 20 : 10;
+                    ctx.fillText(letter, opt.x - halfW + 22, opt.y - halfH + 22);
+                    ctx.shadowBlur = 0;
+                    
+                    if (opt.isCorrect) {
+                        ctx.fillStyle = opt.state === 'correct' ? '#44ff88' : '#ffcc00';
+                        ctx.font = `${Math.min(18, opt.width / 12)}px Arial, sans-serif`;
+                        ctx.shadowColor = opt.state === 'correct' ? '#44ff88' : '#ffcc00';
+                        ctx.shadowBlur = opt.state !== 'normal' ? 30 : 15;
+                        ctx.fillText('⭐', opt.x + halfW - 24, opt.y - halfH + 22);
+                        ctx.shadowBlur = 0;
+                    }
+                    
+                    if (opt.state === 'correct' && opt.isCorrect) {
+                        ctx.fillStyle = '#44ff88';
+                        ctx.font = `bold ${Math.min(20, opt.width / 10)}px Arial, sans-serif`;
+                        ctx.shadowColor = '#44ff88';
+                        ctx.shadowBlur = 30;
+                        ctx.fillText('✓', opt.x + halfW - 24, opt.y + halfH - 18);
+                        ctx.shadowBlur = 0;
+                    } else if (opt.state === 'wrong' && !opt.isCorrect) {
+                        ctx.fillStyle = '#ff4444';
+                        ctx.font = `bold ${Math.min(20, opt.width / 10)}px Arial, sans-serif`;
+                        ctx.shadowColor = '#ff4444';
+                        ctx.shadowBlur = 30;
+                        ctx.fillText('✗', opt.x + halfW - 24, opt.y + halfH - 18);
+                        ctx.shadowBlur = 0;
+                    }
+                    
+                    ctx.shadowBlur = 0;
+                });
+
+                // === PARTÍCULAS ===
+                this.particles = this.particles.filter(p => p.life > 0 && p.size > 0.3);
+                this.particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.03;
+                    p.life--;
+                    p.size *= p.decay || 0.97;
+                    
+                    ctx.globalAlpha = p.life / 40;
+                    ctx.shadowColor = p.color;
+                    ctx.shadowBlur = 20;
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                ctx.globalAlpha = 1;
+                ctx.shadowBlur = 0;
+
+                // === TEXTO FLOTANTE ===
+                this.floatingTexts = this.floatingTexts.filter(t => t.life > 0);
+                this.floatingTexts.forEach(t => {
+                    t.y += t.vy || -0.8;
+                    t.life--;
+                    
+                    ctx.globalAlpha = t.life / 55;
+                    const size = Math.min(26 + (55 - t.life) * 0.15, 40);
+                    ctx.font = `bold ${size}px 'Segoe UI', Arial, sans-serif`;
+                    ctx.textAlign = 'center';
+                    ctx.shadowColor = t.type === 'damage' ? '#ff4444' : 
+                                     t.type === 'xp' ? '#ffcc00' : '#ff44ff';
+                    ctx.shadowBlur = 35;
+                    ctx.fillStyle = t.type === 'damage' ? '#ff4444' : 
+                                   t.type === 'xp' ? '#ffcc00' : '#ff44ff';
+                    ctx.fillText(t.text, t.x, t.y);
+                });
+                ctx.globalAlpha = 1;
+                ctx.shadowBlur = 0;
+
+                // === PREGUNTA ACTUAL ===
+                if (this.currentQuestion && this.questionActive) {
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.82)';
+                    ctx.shadowBlur = 30;
+                    ctx.shadowColor = 'rgba(255, 204, 0, 0.1)';
+                    ctx.beginPath();
+                    ctx.roundRect(12, 8, w - 24, 65, 14);
+                    ctx.fill();
+                    ctx.strokeStyle = '#ffcc00';
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                    ctx.shadowBlur = 0;
+                    
+                    ctx.fillStyle = '#ffffff';
+                    const qSize = Math.min(15, (w - 100) / 27);
+                    ctx.font = `bold ${qSize}px 'Segoe UI', Arial, sans-serif`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    
+                    let qText = this.currentQuestion.question;
+                    const maxQChars = Math.floor((w - 80) / (qSize * 0.55));
+                    if (qText.length > maxQChars) {
+                        qText = qText.substring(0, maxQChars - 3) + '...';
+                    }
+                    ctx.fillText(qText, w/2, 42);
+                    
+                    const total = QUESTIONS[this.currentChapter]?.questions.length || 5;
+                    ctx.fillStyle = '#88cc88';
+                    ctx.font = `${Math.min(11, w / 48)}px 'Press Start 2P', monospace`;
+                    ctx.textAlign = 'left';
+                    ctx.fillText(`${this.questionIndex + 1}/${total}`, 28, 42);
+                    
+                    if (this.streak > 0) {
+                        ctx.fillStyle = '#ffcc00';
+                        ctx.font = `${Math.min(12, w / 42)}px 'Press Start 2P', monospace`;
+                        ctx.textAlign = 'right';
+                        ctx.shadowColor = '#ffcc00';
+                        ctx.shadowBlur = 20;
+                        ctx.fillText(`🔥 ${this.streak}x`, w - 28, 42);
+                        ctx.shadowBlur = 0;
+                    }
+                }
+
+                // === ZONA DE PELIGRO ===
+                const dangerY = h - 38;
+                const dangerGrad = ctx.createLinearGradient(0, dangerY, 0, h);
+                dangerGrad.addColorStop(0, 'rgba(255, 68, 68, 0)');
+                dangerGrad.addColorStop(0.3, 'rgba(255, 68, 68, 0.04)');
+                dangerGrad.addColorStop(1, 'rgba(255, 68, 68, 0.08)');
+                ctx.fillStyle = dangerGrad;
+                ctx.fillRect(0, dangerY, w, h - dangerY);
+                
+                ctx.strokeStyle = 'rgba(255, 68, 68, 0.15)';
+                ctx.lineWidth = 2.5;
+                ctx.setLineDash([10, 10]);
+                ctx.beginPath();
+                ctx.moveTo(0, dangerY);
+                ctx.lineTo(w, dangerY);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                ctx.fillStyle = 'rgba(255, 68, 68, 0.12)';
+                ctx.font = `${Math.min(10, w / 38)}px 'Press Start 2P', monospace`;
+                ctx.textAlign = 'center';
+                ctx.fillText('▼ ZONA DE PELIGRO ▼', w/2, h - 10);
+
+                // Verificar llegada al suelo
+                if (this.questionActive && !this.showingExplanation && !this.waitingForContinue) {
+                    for (let opt of this.fallingOptions) {
+                        if (opt.y + opt.height/2 > dangerY) {
+                            this.questionActive = false;
+                            this.showingExplanation = true;
+                            this.waitingForContinue = true;
+                            this.streak = 0;
+                            this.health -= 12;
+                            this.lastAnswerCorrect = false;
+                            
+                            opt.state = 'wrong';
+                            this.spawnParticles(opt.x, dangerY, 30, '#ff5555');
+                            this.addFloatingText(opt.x, dangerY - 30, '💥 -12 HP', 'damage');
+
+                            this.fallingOptions.forEach(o => {
+                                if (o.isCorrect) {
+                                    o.state = 'correct';
+                                    o.speed = 0;
+                                    this.spawnParticles(o.x, o.y, 35, '#ffcc00');
+                                    this.addFloatingText(o.x, o.y - 20, '👈 CORRECTA', 'xp');
+                                } else if (o !== opt) {
+                                    o.speed = 0;
+                                }
+                            });
+                            
+                            const correctText = this.currentQuestion.options[this.currentQuestion.correct];
+                            this.updateExplanation(
+                                `❌ <span class="wrong-text">Tiempo agotado.</span>\nLa respuesta correcta era: <span class="highlight">${correctText}</span>\n${this.currentQuestion.explanation}`,
+                                'wrong'
+                            );
+
+                            if (this.health <= 0) {
+                                this.health = 0;
+                                this.gameOver = true;
+                                this.isPlaying = false;
+                                this.showGameOver();
+                                this.updateHUD();
+                                return;
+                            }
+
+                            document.getElementById('continue-btn').classList.add('show');
+                            this.updateHUD();
+                            break;
+                        }
+                    }
+                }
+
+                // Pokemon en la esquina
+                if (this.currentPokemon && this.isPlaying) {
+                    ctx.font = `${Math.min(50, w / 8)}px Arial, sans-serif`;
+                    ctx.textAlign = 'right';
+                    ctx.textBaseline = 'bottom';
+                    ctx.shadowColor = 'rgba(255,255,255,0.05)';
+                    ctx.shadowBlur = 30;
+                    ctx.fillText(this.currentPokemon, w - 14, h - 48);
+                    ctx.shadowBlur = 0;
+                }
+
+                // Estado inicial
+                if (!this.isPlaying && !this.gameOver && !this.levelComplete) {
+                    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+                    ctx.fillRect(0, 0, w, h);
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = `${Math.min(20, w / 22)}px 'Press Start 2P', monospace`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.shadowColor = 'rgba(0,0,0,0.6)';
+                    ctx.shadowBlur = 30;
+                    ctx.fillText('🎯 SELECCIONA UN CAPÍTULO', w/2, h/2 - 10);
+                    ctx.shadowBlur = 0;
+                }
+            }
+
+            gameLoop() {
+                this.render();
+                requestAnimationFrame(() => this.gameLoop());
+            }
+        }
+
+        // roundRect polyfill
+        if (!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+                if (r > w/2) r = w/2;
+                if (r > h/2) r = h/2;
+                this.moveTo(x + r, y);
+                this.lineTo(x + w - r, y);
+                this.quadraticCurveTo(x + w, y, x + w, y + r);
+                this.lineTo(x + w, y + h - r);
+                this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+                this.lineTo(x + r, y + h);
+                this.quadraticCurveTo(x, y + h, x, y + h - r);
+                this.lineTo(x, y + r);
+                this.quadraticCurveTo(x, y, x + r, y);
+                return this;
+            };
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new PokemonQuiz();
+        });
+    </script>
+</body>
+</html>
