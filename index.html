@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>⚡ Azure Architect - Pokémon Style (Cap 6-9)</title>
+    <title>⚡ Azure Architect - Pokémon Style (Cap 5-9)</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -26,7 +26,6 @@
             padding: 6px;
         }
 
-        /* ===== HUD ===== */
         #hud {
             display: flex;
             justify-content: space-between;
@@ -81,7 +80,6 @@
             box-shadow: 0 0 20px rgba(68, 255, 136, 0.2);
         }
 
-        /* ===== CUERPO PRINCIPAL ===== */
         #main-area {
             display: flex;
             flex: 1;
@@ -89,7 +87,6 @@
             min-height: 0;
         }
 
-        /* ===== PANEL IZQUIERDO: CAPÍTULOS ===== */
         #left-panel {
             width: 260px;
             min-width: 180px;
@@ -170,7 +167,6 @@
 
         .chapter-list .chapter-btn .emoji { font-size: 1.4rem; display: block; margin-bottom: 3px; }
 
-        /* ===== CENTRO: CANVAS ===== */
         #canvas-wrapper {
             flex: 1;
             position: relative;
@@ -190,7 +186,6 @@
             touch-action: none;
         }
 
-        /* ===== PANEL DERECHO: EXPLICACIÓN ===== */
         #right-panel {
             width: 320px;
             min-width: 220px;
@@ -297,7 +292,6 @@
             color: #8888aa;
         }
 
-        /* ===== BOTÓN CONTINUAR ===== */
         #continue-btn {
             background: linear-gradient(135deg, #ffcc00, #ddaa00);
             border: 3px solid #ffcc00;
@@ -331,7 +325,6 @@
             50% { box-shadow: 0 4px 40px rgba(255, 204, 0, 0.5); }
         }
 
-        /* ===== POPUPS ===== */
         #level-popup, #gameover-popup {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -409,19 +402,16 @@
             text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
         }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
             #left-panel { width: 200px; min-width: 140px; padding: 12px 10px; }
             #left-panel h3 { font-size: 0.5rem; }
             .chapter-list .chapter-btn { padding: 12px 14px; font-size: 0.45rem; }
             .chapter-list .chapter-btn .sub { font-size: 0.3rem; }
-            
             #right-panel { width: 240px; min-width: 160px; padding: 12px 10px; }
             #right-panel h3 { font-size: 0.5rem; }
             #explanation-box .exp-content p { font-size: 0.5rem; }
             #explanation-box .exp-status { font-size: 0.45rem; }
             #continue-btn { font-size: 0.45rem; padding: 10px 18px; }
-            
             .hud-item { font-size: 0.55rem; padding: 4px 12px; }
             .hud-item .health-bar { width: 90px; height: 14px; }
         }
@@ -432,14 +422,12 @@
             .chapter-list .chapter-btn { padding: 8px 10px; font-size: 0.35rem; border-width: 2px; }
             .chapter-list .chapter-btn .sub { font-size: 0.25rem; }
             .chapter-list .chapter-btn .emoji { font-size: 1rem; }
-            
             #right-panel { width: 170px; min-width: 110px; padding: 8px 6px; }
             #right-panel h3 { font-size: 0.4rem; padding-bottom: 8px; }
             #explanation-box .exp-content { padding: 10px 12px; min-height: 80px; }
             #explanation-box .exp-content p { font-size: 0.4rem; line-height: 1.8; }
             #explanation-box .exp-status { font-size: 0.35rem; padding: 6px; }
             #continue-btn { font-size: 0.35rem; padding: 8px 14px; }
-            
             .hud-item { font-size: 0.4rem; padding: 3px 8px; gap: 4px; }
             .hud-item .health-bar { width: 60px; height: 10px; border-width: 2px; }
             .hud-item .hud-icon { font-size: 0.7rem; }
@@ -460,7 +448,6 @@
 </head>
 <body>
     <div id="game-container">
-        <!-- ===== HUD ===== -->
         <div id="hud">
             <div class="hud-item"><span class="hud-icon">📖</span> <span id="levelDisplay">SELEC.</span></div>
             <div class="hud-item"><span class="hud-icon">❤️</span> <span id="healthDisplay">100</span>% <div class="health-bar"><div id="healthBar" style="width:100%"></div></div></div>
@@ -469,26 +456,28 @@
             <div class="hud-item"><span class="hud-icon">✅</span> <span id="correctDisplay">0</span></div>
         </div>
 
-        <!-- ===== CUERPO PRINCIPAL ===== -->
         <div id="main-area">
-            <!-- PANEL IZQUIERDO: CAPÍTULOS -->
             <div id="left-panel">
                 <h3>📖 CAPÍTULOS</h3>
                 <div class="chapter-list" id="chapterList">
+                    <button class="chapter-btn" data-chapter="5">
+                        <span class="emoji">📘</span> Cap 5
+                        <span class="sub">Conectar con SQL Azure</span>
+                    </button>
                     <button class="chapter-btn" data-chapter="6">
-                        <span class="emoji">📘</span> Cap 6
+                        <span class="emoji">📗</span> Cap 6
                         <span class="sub">Tipos y Funciones</span>
                     </button>
                     <button class="chapter-btn" data-chapter="7">
-                        <span class="emoji">📗</span> Cap 7
+                        <span class="emoji">📕</span> Cap 7
                         <span class="sub">Instrucciones T-SQL</span>
                     </button>
                     <button class="chapter-btn" data-chapter="8">
-                        <span class="emoji">📕</span> Cap 8
+                        <span class="emoji">📙</span> Cap 8
                         <span class="sub">DDL</span>
                     </button>
                     <button class="chapter-btn" data-chapter="9">
-                        <span class="emoji">📙</span> Cap 9
+                        <span class="emoji">📒</span> Cap 9
                         <span class="sub">DML y DCL</span>
                     </button>
                 </div>
@@ -497,12 +486,10 @@
                 </div>
             </div>
 
-            <!-- CENTRO: CANVAS -->
             <div id="canvas-wrapper">
                 <canvas id="gameCanvas"></canvas>
             </div>
 
-            <!-- PANEL DERECHO: EXPLICACIÓN -->
             <div id="right-panel">
                 <h3>📝 EXPLICACIÓN</h3>
                 <div id="explanation-box">
@@ -519,7 +506,6 @@
         </div>
     </div>
 
-    <!-- ===== POPUPS ===== -->
     <div id="level-popup">
         <div class="popup-content">
             <h2>🎉 ¡CAPÍTULO COMPLETADO!</h2>
@@ -542,51 +528,137 @@
 
     <script>
         // ================================================================
-        // PREGUNTAS - Capítulos 6-9 (4 capítulos × 5 preguntas = 20 preguntas)
+        // PREGUNTAS - Capítulos 5-9 (20 preguntas cada uno = 100 preguntas)
         // ================================================================
         const QUESTIONS = {
+            5: {
+                name: "Conectar con SQL Azure",
+                enemyName: "🌐 Señor de la Conectividad",
+                questions: [
+                    { question: "¿Cuál es el único puerto TCP permitido para las conexiones con SQL Azure?", options: ["A) 80", "B) 443", "C) 1433", "D) 8080"], correct: 2, explanation: "✅ El puerto 1433 es el único permitido para conexiones con SQL Azure" },
+                    { question: "Si no se especifica una base de datos en la cadena de conexión, ¿a cuál se conecta por defecto?", options: ["A) A la base de datos de usuario más reciente", "B) A la base de datos maestra (master)", "C) A tempdb", "D) La conexión falla automáticamente"], correct: 1, explanation: "✅ Por defecto se conecta a la base de datos master" },
+                    { question: "¿Qué protocolo de flujo de datos utiliza SQL Azure para la comunicación?", options: ["A) HTTP", "B) REST", "C) Flujo TDS versión 7.3 o posterior", "D) SOAP"], correct: 2, explanation: "✅ Utiliza el flujo TDS (Tabular Data Stream) versión 7.3 o posterior" },
+                    { question: "¿Qué tipo de autenticación NO es compatible con SQL Azure?", options: ["A) Autenticación de SQL Server", "B) Autenticación de Windows (seguridad integrada)", "C) Autenticación por nombre de usuario", "D) Autenticación por contraseña"], correct: 1, explanation: "✅ La autenticación de Windows (seguridad integrada) NO es compatible" },
+                    { question: "¿Qué sucede si intenta usar la instrucción USE para cambiar de base de datos?", options: ["A) Cambia el contexto exitosamente", "B) Actualmente no se admite para cambiar de base de datos", "C) Solo funciona si es administrador", "D) Requiere reiniciar la sesión"], correct: 1, explanation: "✅ USE no está permitido para cambiar de base de datos en SQL Azure" },
+                    { question: "En herramientas como sqlcmd, ¿qué formato debe tener el nombre de usuario?", options: ["A) servidor\\usuario", "B) usuario@servidor", "C) usuario:servidor", "D) servidor.usuario"], correct: 1, explanation: "✅ El formato correcto es usuario@servidor" },
+                    { question: "¿Qué opciones de sqlcmd para cambiar contraseñas NO se admiten?", options: ["A) -U y -P", "B) -z y -Z", "C) -S y -d", "D) -E y -i"], correct: 1, explanation: "✅ Las opciones -z y -Z para cambiar contraseñas NO se admiten" },
+                    { question: "¿Qué objeto es obligatorio crear en una tabla para que sea compatible con SQL Azure?", options: ["A) Una vista", "B) Un desencadenador", "C) Una clave principal o un índice clúster", "D) Una tabla temporal global"], correct: 2, explanation: "✅ Una clave principal o índice clúster es obligatorio" },
+                    { question: "¿Qué clase de ADO.NET se recomienda para simplificar la creación de cadenas de conexión seguras?", options: ["A) SqlConnection", "B) SqlConnectionStringBuilder", "C) SqlCommand", "D) SqlDataAdapter"], correct: 1, explanation: "✅ SqlConnectionStringBuilder simplifica la creación de cadenas de conexión" },
+                    { question: "Para evitar ataques 'Man in the middle', ¿cómo deben configurarse los parámetros de ADO.NET?", options: ["A) Encrypt=True y TrustServerCertificate=False", "B) Encrypt=False y TrustServerCertificate=True", "C) Integrated Security=True", "D) Connection Timeout=0"], correct: 0, explanation: "✅ Encrypt=True y TrustServerCertificate=False previenen ataques MITM" },
+                    { question: "¿Qué sucede si ejecuta el código de ejemplo de ADO.NET más de una vez sin borrar la base de datos creada?", options: ["A) Sobrescribe los datos", "B) Se puede producir una excepción porque la base de datos ya existe", "C) Crea una base de datos con un número secuencial", "D) El sistema la ignora silenciosamente"], correct: 1, explanation: "✅ Se produce una excepción porque la base de datos ya existe" },
+                    { question: "¿Qué control de ASP.NET permite realizar operaciones CRUD en SQL Azure sin escribir código?", options: ["A) Repeater", "B) GridView", "C) BulletedList", "D) FileUpload"], correct: 1, explanation: "✅ GridView permite operaciones CRUD sin escribir código" },
+                    { question: "¿Qué clase de origen de datos ASP.NET es compatible con SQL Azure?", options: ["A) ObjectDataSource", "B) SqlDataSource", "C) XmlDataSource", "D) EntityDataSource únicamente"], correct: 1, explanation: "✅ SqlDataSource es compatible con SQL Azure" },
+                    { question: "WCF Data Services permite crear servicios basados en la arquitectura:", options: ["A) SOAP", "B) REST (Representational State Transfer)", "C) RPC", "D) FTP"], correct: 1, explanation: "✅ WCF Data Services se basa en la arquitectura REST" },
+                    { question: "¿Qué tecnología utiliza WCF Data Services para crear servicios de datos en SQL Azure?", options: ["A) Procedimientos almacenados únicamente", "B) Entity Framework", "C) Archivos XML planos", "D) Vistas del sistema"], correct: 1, explanation: "✅ Utiliza Entity Framework para crear servicios de datos" },
+                    { question: "¿Desde qué versión de PHP es compatible el controlador de SQL Server para SQL Azure?", options: ["A) 1.0", "B) 1.1 o posterior", "C) 5.0", "D) 2.0"], correct: 1, explanation: "✅ El controlador es compatible desde la versión 1.1 o posterior" },
+                    { question: "¿Qué extensión de archivo se usa para el modelo de datos en Entity Framework?", options: ["A) .config", "B) .edmx", "C) .sql", "D) .aspx"], correct: 1, explanation: "✅ La extensión .edmx se usa para el modelo de datos en Entity Framework" },
+                    { question: "¿Qué controlador JDBC admite SQL Azure?", options: ["A) JDBC 1.0", "B) JDBC 2.0", "C) JDBC 3.0 o superior", "D) JDBC para Oracle"], correct: 2, explanation: "✅ JDBC 3.0 o superior es compatible con SQL Azure" },
+                    { question: "¿Qué se debe configurar en Java para evitar el error 'No se encuentra la clase' al usar JDBC?", options: ["A) El archivo sqljdbc.jar en la ruta de acceso de clase", "B) La IP del servidor en el host", "C) El puerto 80 en el firewall", "D) La versión de Windows"], correct: 0, explanation: "✅ Debe incluirse sqljdbc.jar en la ruta de acceso de clase" },
+                    { question: "En Entity Framework, ¿qué opción debe desmarcarse en VS 2010 para el ejemplo del libro?", options: ["A) Generar desde la base de datos", "B) Poner en plural o en singular los nombres de objeto generados", "C) Incluir claves externas", "D) Guardar configuración en App.Config"], correct: 1, explanation: "✅ Debe desmarcarse 'Poner en plural o en singular los nombres de objeto generados'" }
+                ]
+            },
             6: {
                 name: "Tipos de datos, funciones y operadores",
                 enemyName: "💎 Titan de Datos",
                 questions: [
-                    { question: "¿Cuál de estos tipos de datos numéricos es compatible con SQL Azure?", options: ["A) bigint", "B) Tipos definidos por el usuario de CLR", "C) image (desusado)", "D) Ninguno de los anteriores"], correct: 0, explanation: "✅ bigint es un tipo de datos numérico compatible con SQL Azure" },
-                    { question: "¿Qué tipo de datos se usa para almacenar datos GPS de latitud y longitud?", options: ["A) geometry", "B) geography", "C) hierarchyid", "D) xml"], correct: 1, explanation: "✅ geography se usa para datos espaciales como GPS (latitud/longitud)" },
-                    { question: "¿Qué función de agregado devuelve la suma de todos los valores de una columna?", options: ["A) COUNT", "B) AVG", "C) SUM", "D) MAX"], correct: 2, explanation: "✅ SUM devuelve la suma total de todos los valores de una columna" },
-                    { question: "¿Qué vista del sistema permite ver el consumo de ancho de banda?", options: ["A) sys.sql_logins", "B) sys.bandwidth_usage", "C) sys.dm_tran_locks", "D) sys.tables"], correct: 1, explanation: "✅ sys.bandwidth_usage muestra el consumo de ancho de banda en SQL Azure" },
-                    { question: "¿Qué método XML se usa para comprobar si una expresión XQuery devuelve un resultado?", options: ["A) query()", "B) exist()", "C) modify()", "D) value()"], correct: 1, explanation: "✅ exist() comprueba si una expresión XQuery devuelve un resultado" }
+                    { question: "¿Cuál de estos tipos numéricos exactos es compatible con SQL Azure?", options: ["A) complex", "B) bigint", "C) long", "D) double"], correct: 1, explanation: "✅ bigint es un tipo numérico exacto compatible con SQL Azure" },
+                    { question: "¿Qué tipo de datos se usa para almacenar información geográfica como latitud y longitud?", options: ["A) geometry", "B) geography", "C) spatial_ref", "D) gps_point"], correct: 1, explanation: "✅ geography se usa para almacenar información geográfica (latitud/longitud)" },
+                    { question: "¿Qué categoría de tipos de datos incluye hierarchyid y xml?", options: ["A) Valores numéricos", "B) Cadenas binarias", "C) Otros tipos de datos", "D) Fecha y hora"], correct: 2, explanation: "✅ hierarchyid y xml pertenecen a 'Otros tipos de datos'" },
+                    { question: "¿Qué método de geography devuelve el área de una instancia espacial?", options: ["A) STArea", "B) STLength", "C) STDistance", "D) STUnion"], correct: 0, explanation: "✅ STArea devuelve el área de una instancia espacial" },
+                    { question: "¿Cuál es la función del método modify() en el tipo de datos XML?", options: ["A) Consultar datos", "B) Realizar operaciones de manipulación de datos (DML) en XML", "C) Comprobar si existe un nodo", "D) Convertir XML a tabla"], correct: 1, explanation: "✅ modify() realiza operaciones DML en datos XML" },
+                    { question: "¿Qué categoría de funciones integradas NO es compatible con SQL Azure?", options: ["A) Funciones de agregado", "B) Funciones escalares", "C) Funciones de conjuntos de filas", "D) Funciones de categoría"], correct: 2, explanation: "✅ Las funciones de conjuntos de filas NO son compatibles" },
+                    { question: "¿Qué función de agregado devuelve el número de elementos de un grupo?", options: ["A) SUM", "B) COUNT", "C) AVG", "D) VAR"], correct: 1, explanation: "✅ COUNT devuelve el número de elementos de un grupo" },
+                    { question: "¿Qué función de categoría numera las filas de un conjunto de resultados?", options: ["A) RANK", "B) ROW_NUMBER", "C) DENSE_RANK", "D) NTILE"], correct: 1, explanation: "✅ ROW_NUMBER numera las filas de un conjunto de resultados" },
+                    { question: "¿Cuál de estas funciones de configuración NO se admite?", options: ["A) @@SERVERNAME", "B) @@MAX_CONNECTIONS", "C) @@SPID", "D) @@LANGUAGE"], correct: 1, explanation: "✅ @@MAX_CONNECTIONS NO es compatible con SQL Azure" },
+                    { question: "¿Qué función matemática devuelve el valor absoluto de un número?", options: ["A) ABS", "B) SQRT", "C) ROUND", "D) CEILING"], correct: 0, explanation: "✅ ABS devuelve el valor absoluto de un número" },
+                    { question: "¿Qué función de metadatos se usa para obtener el ID de una base de datos?", options: ["A) OBJECT_ID", "B) DB_ID", "C) SCHEMA_ID", "D) TYPE_ID"], correct: 1, explanation: "✅ DB_ID devuelve el ID de una base de datos" },
+                    { question: "¿Qué vista del sistema se utiliza para ver las reglas de firewall?", options: ["A) sys.tables", "B) sys.firewall_rules", "C) sys.databases", "D) sys.objects"], correct: 1, explanation: "✅ sys.firewall_rules muestra las reglas de firewall" },
+                    { question: "¿Cuál es el significado del operador % en SQL Azure?", options: ["A) Porcentaje de descuento", "B) Módulo (resto de una división)", "C) División exacta", "D) Exponente"], correct: 1, explanation: "✅ % es el operador módulo (resto de una división)" },
+                    { question: "¿Qué hace el operador compuesto +=?", options: ["A) Compara si dos valores son iguales", "B) Suma la cantidad al valor original y establece el resultado", "C) Incrementa en 1 automáticamente", "D) Concatenación de cadenas"], correct: 1, explanation: "✅ += suma la cantidad al valor original y establece el resultado" },
+                    { question: "¿Qué tipo de datos devuelve un operador lógico como AND u OR?", options: ["A) Entero", "B) Boolean (TRUE, FALSE, UNKNOWN)", "C) XML", "D) Geography"], correct: 1, explanation: "✅ Los operadores lógicos devuelven Boolean (TRUE, FALSE, UNKNOWN)" },
+                    { question: "¿Qué operador unario se usa para realizar un NOT bit a bit?", options: ["A) !", "B) ~", "C) -", "D) +"], correct: 1, explanation: "✅ ~ es el operador NOT bit a bit" },
+                    { question: "¿Cuáles son las vistas de compatibilidad admitidas?", options: ["A) sys.syscharsets, sys.syslanguages y sys.systypes", "B) Todas las de SQL Server 2000", "C) Ninguna, están prohibidas", "D) Solo sys.sysusers"], correct: 0, explanation: "✅ sys.syscharsets, sys.syslanguages y sys.systypes son compatibles" },
+                    { question: "Para consultar vistas de administración dinámica (DMV), ¿qué permiso se requiere?", options: ["A) db_owner", "B) VIEW DATABASE STATE", "C) CONTROL", "D) ALTER ANY LOGIN"], correct: 1, explanation: "✅ Se requiere VIEW DATABASE STATE para consultar DMVs" },
+                    { question: "¿Qué DMV muestra estadísticas sobre las particiones de la base de datos?", options: ["A) sys.dm_exec_sessions", "B) sys.dm_db_partition_stats", "C) sys.dm_tran_locks", "D) sys.dm_exec_requests"], correct: 1, explanation: "✅ sys.dm_db_partition_stats muestra estadísticas sobre particiones" },
+                    { question: "¿Qué categoría de vistas proporciona metadatos sobre objetos como tablas y columnas?", options: ["A) Vistas de administración dinámica", "B) Vistas del esquema de información", "C) Vistas de catálogo", "D) Vistas de replicación"], correct: 2, explanation: "✅ Las vistas de catálogo proporcionan metadatos sobre objetos" }
                 ]
             },
             7: {
                 name: "Instrucciones admitidas y procedimientos",
                 enemyName: "⚡ Guerrero T-SQL",
                 questions: [
-                    { question: "¿Cuál es el valor máximo de paralelismo (MAXDOP) permitido en SQL Azure?", options: ["A) 0 (Ilimitado)", "B) 1", "C) 4", "D) 8"], correct: 1, explanation: "✅ El valor MAXDOP permitido en SQL Azure es 1" },
-                    { question: "¿Qué instrucción común de T-SQL para cambiar de base de datos NO es compatible en la nube?", options: ["A) SELECT", "B) INSERT", "C) USE", "D) EXECUTE"], correct: 2, explanation: "✅ USE no es compatible para saltar entre bases de datos en SQL Azure" },
-                    { question: "¿Qué sucede durante el 'Throttling' estricto?", options: ["A) Se permiten todas las conexiones", "B) No se permiten nuevas conexiones hasta que se liberen recursos", "C) El servidor se reinicia automáticamente", "D) Se eliminan todos los índices"], correct: 1, explanation: "✅ En Throttling estricto, no se permiten nuevas conexiones hasta liberar recursos" },
-                    { question: "Para obtener el 'modo de limitación' de un código de motivo, ¿qué operación matemática se aplica?", options: ["A) Multiplicación por 10", "B) División entre 100", "C) Módulo 4", "D) Raíz cuadrada"], correct: 2, explanation: "✅ Se aplica módulo 4 al código de motivo para obtener el modo de limitación" },
-                    { question: "¿Qué procedimiento almacenado se usa para crear una regla de firewall?", options: ["A) sp_addlogin", "B) sp_set_firewall_rule", "C) sp_helpstats", "D) sp_recompile"], correct: 1, explanation: "✅ sp_set_firewall_rule crea reglas de firewall en SQL Azure" }
+                    { question: "¿Cuál es el grado máximo de paralelismo (MAXDOP) en SQL Azure?", options: ["A) Automático según CPU", "B) Siempre 1 (ignora la sugerencia)", "C) Máximo 8", "D) 0 (ilimitado)"], correct: 1, explanation: "✅ MAXDOP en SQL Azure es siempre 1 (ignora la sugerencia)" },
+                    { question: "¿Qué instrucción SET de estadísticas muestra el tiempo de ejecución?", options: ["A) SET STATISTICS IO", "B) SET STATISTICS TIME", "C) SET SHOWPLAN_XML", "D) SET FORCEPLAN"], correct: 1, explanation: "✅ SET STATISTICS TIME muestra el tiempo de ejecución" },
+                    { question: "¿Cuál de estas instrucciones NO se admite en SQL Azure?", options: ["A) SELECT", "B) BACKUP", "C) UPDATE", "D) DELETE"], correct: 1, explanation: "✅ BACKUP no se admite en SQL Azure" },
+                    { question: "¿Qué comando se usa para terminar una sesión de usuario en SQL Server pero NO se admite en Azure?", options: ["A) STOP", "B) KILL", "C) END", "D) TERMINATE"], correct: 1, explanation: "✅ KILL no se admite para terminar sesiones de usuario en SQL Azure" },
+                    { question: "¿Qué procedimiento almacenado se usa para crear una regla de firewall?", options: ["A) sp_add_firewall", "B) sp_set_firewall_rule", "C) sp_config_network", "D) sp_grant_access"], correct: 1, explanation: "✅ sp_set_firewall_rule crea reglas de firewall" },
+                    { question: "¿Qué procedimiento almacenado NO se admite en SQL Azure?", options: ["A) sp_executesql", "B) sp_databases", "C) sp_help", "D) sp_rename"], correct: 1, explanation: "✅ sp_databases no se admite en SQL Azure" },
+                    { question: "El error 40508 indica que:", options: ["A) La contraseña es incorrecta", "B) La instrucción USE no se admite para cambiar de base de datos", "C) El servidor está caído", "D) Se superó la cuota de espacio"], correct: 1, explanation: "✅ El error 40508 indica que USE no se admite para cambiar de base de datos" },
+                    { question: "¿Qué error recibe el usuario cuando la base de datos alcanza su cuota de tamaño?", options: ["A) 40501", "B) 40544", "C) 40197", "D) 40613"], correct: 1, explanation: "✅ El error 40544 indica que se ha alcanzado la cuota de tamaño" },
+                    { question: "¿Cuántas reglas de firewall como máximo puede tener un servidor?", options: ["A) 50", "B) 100", "C) 128", "D) Ilimitadas"], correct: 2, explanation: "✅ Un servidor puede tener hasta 128 reglas de firewall" },
+                    { question: "¿Qué sucede si una sesión consume demasiada memoria en SQL Azure?", options: ["A) Se le asigna más memoria", "B) La sesión termina automáticamente (Error 40553)", "C) El sistema se ralentiza para todos", "D) Se borran datos temporales"], correct: 1, explanation: "✅ La sesión termina automáticamente con el error 40553" },
+                    { question: "¿Cómo se llama el mecanismo de SQL Azure para proteger recursos ante un uso excesivo?", options: ["A) Firewall", "B) Limitación (Throttling)", "C) Mirroring", "D) Sharding"], correct: 1, explanation: "✅ El mecanismo se llama Throttling (Limitación)" },
+                    { question: "La limitación 'estricta' ocurre principalmente cuando:", options: ["A) Hay una sola conexión", "B) El equipo se queda sin recursos críticos como espacio de almacenamiento", "C) El usuario escribe mal el código", "D) Es fin de mes"], correct: 1, explanation: "✅ La limitación estricta ocurre cuando el equipo se queda sin recursos críticos" },
+                    { question: "¿Cómo se obtiene el 'modo de limitación' a partir de un código de motivo?", options: ["A) Dividiendo entre 100", "B) Aplicando el módulo 4 al código", "C) Restando el ID de sesión", "D) Multiplicando por 256"], correct: 1, explanation: "✅ Se aplica el módulo 4 al código de motivo para obtener el modo de limitación" },
+                    { question: "En el modo de limitación 1, ¿qué operaciones se rechazan?", options: ["A) Solo SELECT", "B) Actualización e inserción (INSERT, UPDATE)", "C) Borrado de tablas", "D) Todo tipo de conexión"], correct: 1, explanation: "✅ En el modo 1 se rechazan INSERT y UPDATE" },
+                    { question: "¿Qué significa un modo de limitación igual a 3?", options: ["A) Sin limitación", "B) Rechazar todo", "C) Solo lectura permitida", "D) Error de red"], correct: 1, explanation: "✅ El modo 3 significa rechazar todo" },
+                    { question: "¿Qué sucede con una sesión inactiva durante 30 minutos?", options: ["A) Se mantiene abierta", "B) Se termina automáticamente por el sistema", "C) Requiere reingresar la contraseña", "D) Pasa a modo de bajo consumo"], correct: 1, explanation: "✅ Una sesión inactiva por 30 minutos se termina automáticamente" },
+                    { question: "¿Qué instrucción TCL se usa para confirmar todos los cambios de una transacción?", options: ["A) BEGIN TRANSACTION", "B) COMMIT TRANSACTION", "C) ROLLBACK TRANSACTION", "D) SAVE TRANSACTION"], correct: 1, explanation: "✅ COMMIT TRANSACTION confirma todos los cambios de una transacción" },
+                    { question: "¿Cuál es el objetivo del 'Tejido' (Fabric) de SQL Azure?", options: ["A) Cobrar a los usuarios", "B) Habilitar conmutación por error y equilibrio de carga", "C) Crear la interfaz web", "D) Programar en C#"], correct: 1, explanation: "✅ El Fabric habilita conmutación por error y equilibrio de carga" },
+                    { question: "SMO (Objetos de administración de SQL Server) en Azure está pensado para:", options: ["A) Aplicaciones de usuario final", "B) Proporcionar acceso a Management Studio", "C) Reemplazar a T-SQL", "D) Crear reportes"], correct: 1, explanation: "✅ SMO en Azure proporciona acceso a Management Studio" },
+                    { question: "¿Cuál es la gravedad de un error de pérdida de conexión típica (ej. 40549)?", options: ["A) 10", "B) 15", "C) 20", "D) 25"], correct: 2, explanation: "✅ La gravedad de un error de pérdida de conexión es 20" }
                 ]
             },
             8: {
                 name: "Lenguaje de definición de datos (DDL)",
                 enemyName: "🏗️ Constructor de Datos",
                 questions: [
-                    { question: "¿Qué cláusula de ALTER DATABASE se usa para cambiar de Web Edition a Business Edition?", options: ["A) RENAME", "B) MODIFY (EDITION = 'business')", "C) UPGRADE", "D) SET"], correct: 1, explanation: "✅ MODIFY (EDITION = 'business') cambia de Web a Business Edition" },
-                    { question: "¿Cómo debe ejecutarse la instrucción CREATE DATABASE en un script?", options: ["A) Al final de un procedimiento", "B) Como la única instrucción en un lote de Transact-SQL", "C) Dentro de una transacción distribuida", "D) Después de una instrucción USE"], correct: 1, explanation: "✅ CREATE DATABASE debe ser la única instrucción en un lote T-SQL" },
-                    { question: "¿Qué entidad NO se puede modificar con ALTER AUTHORIZATION en SQL Azure?", options: ["A) ROLE", "B) DATABASE", "C) SCHEMA", "D) OBJECT"], correct: 1, explanation: "✅ DATABASE no se puede modificar con ALTER AUTHORIZATION en SQL Azure" },
-                    { question: "¿Es posible crear una tabla sin índice clúster?", options: ["A) No, el comando CREATE TABLE fallará", "B) Sí, pero no se podrán insertar datos hasta que se cree uno", "C) Sí, y funciona igual que en local", "D) No, SQL Azure los crea automáticamente de forma aleatoria"], correct: 1, explanation: "✅ Sí se puede crear, pero no se insertarán datos hasta tener índice clúster" },
-                    { question: "¿Qué requiere la instrucción DROP INDEX además del nombre del índice?", options: ["A) La fecha de creación", "B) La cláusula ON seguida del nombre del objeto (tabla/vista)", "C) El nombre del servidor", "D) La contraseña de administrador"], correct: 1, explanation: "✅ DROP INDEX requiere ON seguido del nombre de la tabla o vista" }
+                    { question: "¿Qué instrucción DDL cambia la propiedad de un elemento protegible?", options: ["A) ALTER AUTHORIZATION", "B) ALTER DATABASE", "C) GRANT", "D) CREATE OWNERSHIP"], correct: 0, explanation: "✅ ALTER AUTHORIZATION cambia la propiedad de un elemento protegible" },
+                    { question: "¿Qué NO se puede modificar con ALTER DATABASE en SQL Azure?", options: ["A) El nombre de la base de datos", "B) Grupos de archivos y rutas físicas", "C) La edición (Web/Business)", "D) El tamaño máximo (MAXSIZE)"], correct: 1, explanation: "✅ Grupos de archivos y rutas físicas NO se pueden modificar con ALTER DATABASE" },
+                    { question: "¿Qué sucede si alcanza el límite MAXSIZE tras un ALTER DATABASE?", options: ["A) Se borran datos automáticamente", "B) Recibe el código de error 40544 y no puede insertar datos", "C) El servidor se reinicia", "D) Pasa automáticamente a la siguiente edición"], correct: 1, explanation: "✅ Recibe el error 40544 y no puede insertar más datos" },
+                    { question: "¿Qué tipo de funciones NO admite ALTER FUNCTION?", options: ["A) Funciones escalares T-SQL", "B) Funciones CLR (Common Language Runtime)", "C) Funciones con valores de tabla insertados", "D) Funciones de múltiples instrucciones"], correct: 1, explanation: "✅ ALTER FUNCTION no admite funciones CLR" },
+                    { question: "¿Qué cláusula de ALTER INDEX permite volver a generar un índice?", options: ["A) DISABLE", "B) REBUILD", "C) SET", "D) REORGANIZE"], correct: 1, explanation: "✅ REBUILD permite volver a generar un índice" },
+                    { question: "¿Cuál es el límite de caracteres para el nombre de inicio de sesión en Azure?", options: ["A) 64", "B) 128 (incluyendo el nombre del servidor)", "C) 256", "D) 50"], correct: 1, explanation: "✅ El límite es 128 caracteres incluyendo el nombre del servidor" },
+                    { question: "¿Qué opción de ALTER TABLE NO se admite en SQL Azure?", options: ["A) ADD COLUMN", "B) SET FILESTREAM_ON", "C) DROP CONSTRAINT", "D) REBUILD"], correct: 1, explanation: "✅ SET FILESTREAM_ON no se admite en SQL Azure" },
+                    { question: "¿En qué base de datos se debe ejecutar CREATE DATABASE?", options: ["A) En la base de datos del cliente", "B) En la base de datos maestra (master)", "C) En tempdb", "D) No importa la base de datos"], correct: 1, explanation: "✅ CREATE DATABASE debe ejecutarse en la base de datos master" },
+                    { question: "¿Qué instrucción crea una copia de seguridad de una base de datos en Azure?", options: ["A) BACKUP DATABASE", "B) CREATE DATABASE ... AS COPY OF", "C) REPLICATE DATABASE", "D) RESTORE DATABASE"], correct: 1, explanation: "✅ CREATE DATABASE ... AS COPY OF crea una copia de la base de datos" },
+                    { question: "La copia de una base de datos es una operación de tipo:", options: ["A) Sincrónica (bloqueante)", "B) Asincrónica", "C) Manual", "D) Solo lectura"], correct: 1, explanation: "✅ La copia de una base de datos es asincrónica" },
+                    { question: "¿Qué propiedad de tabla es obligatoria al usar CREATE INDEX?", options: ["A) FILLFACTOR", "B) Debe existir un índice clúster en la tabla", "C) PAD_INDEX", "D) DATA_COMPRESSION"], correct: 1, explanation: "✅ Debe existir un índice clúster en la tabla para usar CREATE INDEX" },
+                    { question: "¿Qué tipo de nombres de objetos NO admite SQL Azure?", options: ["A) Nombres de una parte", "B) Nombres de dos partes", "C) Nombres de tres partes", "D) Nombres de cuatro partes"], correct: 3, explanation: "✅ Los nombres de cuatro partes no son compatibles en SQL Azure" },
+                    { question: "¿Qué instrucción se usa para crear un nombre alternativo para un objeto?", options: ["A) CREATE ALTERNATIVE", "B) CREATE SYNONYM", "C) CREATE ALIAS", "D) CREATE POINTER"], correct: 1, explanation: "✅ CREATE SYNONYM crea un nombre alternativo para un objeto" },
+                    { question: "En CREATE TABLE, ¿qué sucede si intenta insertar datos sin un índice clúster?", options: ["A) Los inserta normalmente", "B) Se producirá un error", "C) El sistema crea uno por usted", "D) Solo funciona para tablas pequeñas"], correct: 1, explanation: "✅ Se producirá un error al intentar insertar datos sin índice clúster" },
+                    { question: "¿Qué desencadenadores (triggers) NO se pueden crear en SQL Azure?", options: ["A) DML Triggers", "B) DDL Triggers", "C) Logon Triggers (en eventos de inicio de sesión)", "D) After Triggers"], correct: 2, explanation: "✅ Los Logon Triggers (eventos de inicio de sesión) no se pueden crear" },
+                    { question: "¿Qué instrucción agrega un nuevo usuario a la base de datos actual?", options: ["A) ADD USER", "B) CREATE USER", "C) GRANT ACCESS", "D) INSERT USER"], correct: 1, explanation: "✅ CREATE USER agrega un nuevo usuario a la base de datos actual" },
+                    { question: "¿Qué instrucción borra una base de datos permanentemente?", options: ["A) DELETE DATABASE", "B) DROP DATABASE", "C) ERASE DATABASE", "D) REMOVE DATABASE"], correct: 1, explanation: "✅ DROP DATABASE borra una base de datos permanentemente" },
+                    { question: "¿Qué cláusula es obligatoria en DROP INDEX además del nombre del índice?", options: ["A) DATABASE", "B) ON seguido del nombre del objeto (tabla/vista)", "C) FORCE", "D) WITH DELETE"], correct: 1, explanation: "✅ Se requiere ON seguido del nombre del objeto (tabla/vista)" },
+                    { question: "¿Qué sucede al ejecutar DROP TABLE?", options: ["A) Solo se borran los datos", "B) Se quita la definición de tabla, datos, índices y permisos", "C) La tabla se mueve a la papelera", "D) Solo funciona si la tabla está vacía"], correct: 1, explanation: "✅ DROP TABLE quita la definición, datos, índices y permisos" },
+                    { question: "¿Es posible crear tipos de datos definidos por el usuario (alias)?", options: ["A) Sí, mediante CREATE TYPE", "B) No, solo se admiten tipos estándar", "C) Solo en la edición Business", "D) Sí, pero requieren reiniciar el servidor"], correct: 1, explanation: "✅ No, solo se admiten tipos de datos estándar en SQL Azure" }
                 ]
             },
             9: {
                 name: "DML y DCL",
                 enemyName: "👑 Señor de los Datos",
                 questions: [
-                    { question: "¿Qué tipo de nombres NO se admiten en la instrucción INSERT?", options: ["A) Nombres de una parte", "B) Nombres de dos partes", "C) Nombres de cuatro partes (servidores vinculados)", "D) Nombres de tres partes (si la BD es la actual)"], correct: 2, explanation: "✅ Nombres de cuatro partes (servidores vinculados) no son admitidos en INSERT" },
-                    { question: "¿Qué comando del lenguaje TCL deshace todos los cambios de una transacción actual?", options: ["A) COMMIT", "B) ROLLBACK TRANSACTION", "C) UNDO", "D) CANCEL"], correct: 1, explanation: "✅ ROLLBACK TRANSACTION deshace todos los cambios de la transacción actual" },
-                    { question: "¿Qué instrucción se usa para revocar un permiso previamente concedido?", options: ["A) GRANT", "B) DENY", "C) REVOKE", "D) DELETE"], correct: 2, explanation: "✅ REVOKE revoca un permiso que fue previamente concedido" },
-                    { question: "¿Qué opción de EXECUTE NO es compatible con SQL Azure?", options: ["A) WITH RECOMPILE", "B) Opción Number", "C) Ejecución de procedimientos almacenados", "D) Ejecución de cadenas de caracteres"], correct: 1, explanation: "✅ La opción Number de EXECUTE no es compatible con SQL Azure" },
-                    { question: "¿Qué limitación tiene la instrucción USE en SQL Azure?", options: ["A) Permite cambiar a cualquier servidor", "B) Solo puede hacer referencia a la base de datos actual (no cambia de contexto)", "C) Solo se puede usar una vez al año", "D) Requiere permisos de dbmanager para cada uso"], correct: 1, explanation: "✅ USE solo puede referenciar la base actual, no cambia el contexto" }
+                    { question: "¿Qué instrucción DML tiene acotaciones específicas en SQL Azure?", options: ["A) UPDATE", "B) INSERT", "C) DELETE", "D) SELECT"], correct: 0, explanation: "✅ UPDATE tiene acotaciones específicas en SQL Azure" },
+                    { question: "¿Qué opción de INSERT NO se admite en SQL Azure?", options: ["A) TOP", "B) VALUES", "C) OPENQUERY u OPENROWSET", "D) OUTPUT"], correct: 2, explanation: "✅ OPENQUERY u OPENROWSET no se admiten en INSERT" },
+                    { question: "¿Qué hace la instrucción GRANT?", options: ["A) Quita un permiso", "B) Concede permisos en una base de datos o entidad", "C) Crea un nuevo usuario", "D) Inicia una transacción"], correct: 1, explanation: "✅ GRANT concede permisos en una base de datos o entidad" },
+                    { question: "¿Qué tipo de principal de base de datos NO se admite en GRANT?", options: ["A) Database_user", "B) Database_role", "C) Usuarios mapeados a claves asimétricas", "D) Usuarios sin login"], correct: 2, explanation: "✅ Usuarios mapeados a claves asimétricas no se admiten en GRANT" },
+                    { question: "¿Se pueden conceder permisos sobre roles de aplicación (APPLICATION ROLE)?", options: ["A) Sí", "B) No admitido", "C) Solo en la base de datos master", "D) Solo lectura"], correct: 1, explanation: "✅ No se admiten permisos sobre roles de aplicación" },
+                    { question: "¿Qué instrucción revoca un permiso previamente concedido?", options: ["A) DENY", "B) REVOKE", "C) RECALL", "D) UNDO GRANT"], correct: 1, explanation: "✅ REVOKE revoca un permiso previamente concedido" },
+                    { question: "¿Para qué sirve la opción CASCADE en REVOKE?", options: ["A) Borra la base de datos en cadena", "B) Revoca permisos a quienes el usuario también se los concedió", "C) Actualiza todas las tablas", "D) Reinicia los permisos del servidor"], correct: 1, explanation: "✅ CASCADE revoca permisos a quienes el usuario también se los concedió" },
+                    { question: "¿Cuál es la función de la instrucción DENY?", options: ["A) Elimina un usuario", "B) Deniega un permiso a un principal, prevaleciendo sobre herencias", "C) Cierra la conexión", "D) Valida una contraseña"], correct: 1, explanation: "✅ DENY deniega un permiso prevaleciendo sobre herencias" },
+                    { question: "¿Qué módulo NO puede ser ejecutado con EXECUTE en Azure?", options: ["A) Procedimientos almacenados", "B) Comandos de paso a través en servidores vinculados", "C) Cadenas de caracteres", "D) Funciones escalares"], correct: 1, explanation: "✅ Comandos de paso a través en servidores vinculados no se pueden ejecutar" },
+                    { question: "¿Qué opción de EXECUTE se ha deshabilitado por seguridad?", options: ["A) WITH RECOMPILE", "B) Opción Number", "C) Paso de parámetros", "D) Uso de variables"], correct: 1, explanation: "✅ La opción Number de EXECUTE se ha deshabilitado por seguridad" },
+                    { question: "¿Qué instrucción establece el contexto de ejecución de una sesión?", options: ["A) SET CONTEXT", "B) EXECUTE AS", "C) SWITCH USER", "D) LOGIN AS"], correct: 1, explanation: "✅ EXECUTE AS establece el contexto de ejecución de una sesión" },
+                    { question: "¿Qué opción de EXECUTE AS NO se admite?", options: ["A) USER = 'name'", "B) EXECUTE AS LOGIN", "C) CALLER", "D) SELF"], correct: 1, explanation: "✅ EXECUTE AS LOGIN no se admite en SQL Azure" },
+                    { question: "¿A qué módulos se les puede definir un contexto con EXECUTE AS Clause?", options: ["A) Solo tablas", "B) Funciones (excepto inline TVF), procedimientos y DML Triggers", "C) Inicios de sesión de servidor", "D) Vistas del sistema"], correct: 1, explanation: "✅ Se puede definir en funciones (excepto inline TVF), procedimientos y DML Triggers" },
+                    { question: "¿Qué comando vuelve a activar un desencadenador deshabilitado?", options: ["A) START TRIGGER", "B) ENABLE TRIGGER", "C) ACTIVATE TRIGGER", "D) ON TRIGGER"], correct: 1, explanation: "✅ ENABLE TRIGGER vuelve a activar un desencadenador" },
+                    { question: "¿Qué argumento NO se admite con ENABLE/DISABLE TRIGGER?", options: ["A) OBJECT_NAME", "B) ALL SERVER", "C) DATABASE", "D) El nombre específico del trigger"], correct: 1, explanation: "✅ ALL SERVER no se admite en ENABLE/DISABLE TRIGGER" },
+                    { question: "¿Qué comando se usa para deshabilitar un trigger?", options: ["A) DISABLE TRIGGER", "B) DROP TRIGGER", "C) STOP TRIGGER", "D) PAUSE TRIGGER"], correct: 0, explanation: "✅ DISABLE TRIGGER deshabilita un desencadenador" },
+                    { question: "¿Cuál es la limitación de la instrucción USE en SQL Azure?", options: ["A) Cambia a cualquier servidor", "B) El parámetro solo puede hacer referencia a la base de datos actual", "C) Requiere ser propietario de la BD", "D) Solo se puede usar en la base master"], correct: 1, explanation: "✅ USE solo puede hacer referencia a la base de datos actual" },
+                    { question: "¿Qué lenguaje asegura que una serie de operaciones se realicen como una unidad?", options: ["A) DDL", "B) DML", "C) TCL (Control de Transacciones)", "D) DCL"], correct: 2, explanation: "✅ TCL (Control de Transacciones) asegura que las operaciones se realicen como una unidad" },
+                    { question: "¿Qué comando TCL deshace los cambios de una transacción no confirmada?", options: ["A) COMMIT", "B) ROLLBACK TRANSACTION", "C) CANCEL", "D) UNDO"], correct: 1, explanation: "✅ ROLLBACK TRANSACTION deshace los cambios de una transacción no confirmada" },
+                    { question: "¿Cómo es la sintaxis de TCL en SQL Azure comparada con SQL Server?", options: ["A) Muy limitada", "B) Es la misma (admisibles sin acotaciones)", "C) Solo permite una transacción por hora", "D) Requiere prefijos especiales"], correct: 1, explanation: "✅ La sintaxis TCL en SQL Azure es la misma que en SQL Server" }
                 ]
             }
         };
@@ -598,7 +670,6 @@
             constructor() {
                 this.canvas = document.getElementById('gameCanvas');
                 this.ctx = this.canvas.getContext('2d');
-                
                 this.currentChapter = null;
                 this.questionIndex = 0;
                 this.score = 0;
@@ -618,8 +689,8 @@
                 this.questionActive = false;
                 this.currentQuestion = null;
                 this.correctAnswer = null;
-                this.pokemonSprites = ['💎', '⚡', '🏗️', '👑', '🦋', '🐉'];
-                this.currentPokemon = '💎';
+                this.pokemonSprites = ['🌐', '💎', '⚡', '🏗️', '👑'];
+                this.currentPokemon = '🌐';
                 this.showingExplanation = false;
                 this.waitingForContinue = false;
                 this.grassBlades = [];
@@ -638,7 +709,7 @@
                 this.generateGrass();
                 this.generateClouds();
                 this.updateHUD();
-                this.updateExplanation('🎯 Selecciona un capítulo (6-9) para comenzar', 'waiting');
+                this.updateExplanation('🎯 Selecciona un capítulo (5-9) para comenzar', 'waiting');
                 document.querySelectorAll('.chapter-btn').forEach(b => b.classList.remove('locked'));
             }
 
@@ -738,7 +809,7 @@
             }
 
             startChapter(chapter) {
-                if (chapter < 6 || chapter > 9) return;
+                if (chapter < 5 || chapter > 9) return;
                 
                 this.currentChapter = chapter;
                 this.questionIndex = 0;
@@ -752,7 +823,7 @@
                 this.questionActive = false;
                 this.showingExplanation = false;
                 this.waitingForContinue = false;
-                this.currentPokemon = this.pokemonSprites[(chapter - 6) % this.pokemonSprites.length];
+                this.currentPokemon = this.pokemonSprites[(chapter - 5) % this.pokemonSprites.length];
 
                 document.querySelectorAll('.chapter-btn').forEach(btn => {
                     btn.classList.remove('active');
@@ -1016,7 +1087,7 @@
                 document.getElementById('levelDisplay').textContent = 'SELEC.';
                 document.getElementById('continue-btn').classList.remove('show');
                 this.updateHUD();
-                this.updateExplanation('🎯 Selecciona un capítulo (6-9) para comenzar', 'waiting');
+                this.updateExplanation('🎯 Selecciona un capítulo (5-9) para comenzar', 'waiting');
                 this.addFloatingText(this.canvas.width/2, 60, '🔄 REINICIADO', 'special');
             }
 
@@ -1076,7 +1147,6 @@
                 ctx.fillStyle = skyGrad;
                 ctx.fillRect(0, 0, w, h * 0.6);
 
-                // Nubes
                 this.clouds.forEach(c => {
                     c.x += c.speed;
                     if (c.x > w + 250) c.x = -250;
@@ -1094,7 +1164,6 @@
                 });
                 ctx.globalAlpha = 1;
 
-                // Colinas
                 ctx.fillStyle = '#4a9a4a';
                 ctx.shadowColor = 'rgba(0,0,0,0.1)';
                 ctx.shadowBlur = 8;
@@ -1108,7 +1177,6 @@
                 ctx.lineTo(0, h);
                 ctx.fill();
 
-                // Césped
                 const grassGrad = ctx.createLinearGradient(0, h * 0.5, 0, h);
                 grassGrad.addColorStop(0, '#5abf5a');
                 grassGrad.addColorStop(0.25, '#4aaf4a');
@@ -1119,7 +1187,6 @@
                 ctx.fillRect(0, h * 0.5, w, h * 0.5);
                 ctx.shadowBlur = 0;
 
-                // Hierba
                 this.grassBlades.forEach(g => {
                     const sway = Math.sin(Date.now() * g.sway + g.phase) * 4;
                     ctx.strokeStyle = g.color;
@@ -1138,7 +1205,6 @@
                 });
                 ctx.shadowBlur = 0;
 
-                // Pokebolas
                 this.pokeballs.forEach(pb => {
                     pb.y += pb.speed;
                     pb.rotation += 0.003;
@@ -1189,7 +1255,6 @@
                     ctx.restore();
                 });
 
-                // === OPCIONES CAYENDO ===
                 this.fallingOptions.forEach(opt => {
                     if (opt.state === 'normal') {
                         opt.y += opt.speed;
@@ -1200,18 +1265,15 @@
                     
                     let borderColor = opt.color;
                     let bgColor = 'rgba(0, 0, 0, 0.9)';
-                    let glowColor = opt.color + '55';
                     
                     if (opt.state === 'correct') {
                         borderColor = '#44ff88';
                         bgColor = 'rgba(0, 50, 20, 0.9)';
-                        glowColor = '#44ff8866';
                         ctx.shadowColor = '#44ff88';
                         ctx.shadowBlur = 40;
                     } else if (opt.state === 'wrong') {
                         borderColor = '#ff4444';
                         bgColor = 'rgba(50, 0, 0, 0.9)';
-                        glowColor = '#ff444466';
                         ctx.shadowColor = '#ff4444';
                         ctx.shadowBlur = 40;
                     } else {
@@ -1292,7 +1354,6 @@
                     ctx.shadowBlur = 0;
                 });
 
-                // === PARTÍCULAS ===
                 this.particles = this.particles.filter(p => p.life > 0 && p.size > 0.3);
                 this.particles.forEach(p => {
                     p.x += p.vx;
@@ -1312,7 +1373,6 @@
                 ctx.globalAlpha = 1;
                 ctx.shadowBlur = 0;
 
-                // === TEXTO FLOTANTE ===
                 this.floatingTexts = this.floatingTexts.filter(t => t.life > 0);
                 this.floatingTexts.forEach(t => {
                     t.y += t.vy || -0.8;
@@ -1332,7 +1392,6 @@
                 ctx.globalAlpha = 1;
                 ctx.shadowBlur = 0;
 
-                // === PREGUNTA ACTUAL ===
                 if (this.currentQuestion && this.questionActive) {
                     ctx.fillStyle = 'rgba(0, 0, 0, 0.82)';
                     ctx.shadowBlur = 30;
@@ -1375,7 +1434,6 @@
                     }
                 }
 
-                // === ZONA DE PELIGRO ===
                 const dangerY = h - 38;
                 const dangerGrad = ctx.createLinearGradient(0, dangerY, 0, h);
                 dangerGrad.addColorStop(0, 'rgba(255, 68, 68, 0)');
@@ -1398,7 +1456,6 @@
                 ctx.textAlign = 'center';
                 ctx.fillText('▼ ZONA DE PELIGRO ▼', w/2, h - 10);
 
-                // Verificar llegada al suelo
                 if (this.questionActive && !this.showingExplanation && !this.waitingForContinue) {
                     for (let opt of this.fallingOptions) {
                         if (opt.y + opt.height/2 > dangerY) {
@@ -1446,7 +1503,6 @@
                     }
                 }
 
-                // Pokemon en la esquina
                 if (this.currentPokemon && this.isPlaying) {
                     ctx.font = `${Math.min(50, w / 8)}px Arial, sans-serif`;
                     ctx.textAlign = 'right';
@@ -1457,7 +1513,6 @@
                     ctx.shadowBlur = 0;
                 }
 
-                // Estado inicial
                 if (!this.isPlaying && !this.gameOver && !this.levelComplete) {
                     ctx.fillStyle = 'rgba(0,0,0,0.5)';
                     ctx.fillRect(0, 0, w, h);
@@ -1478,7 +1533,6 @@
             }
         }
 
-        // roundRect polyfill
         if (!CanvasRenderingContext2D.prototype.roundRect) {
             CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
                 if (r > w/2) r = w/2;
